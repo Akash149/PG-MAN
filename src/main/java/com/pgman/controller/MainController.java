@@ -131,7 +131,7 @@ public class MainController {
                     guest.setRole(user.getRole());
                     guest.setOccupation(user.getOccupation());
                     guest.setDob(date);
-                    guest.setEnabled(true);
+                    // guest.setEnabled(true);
                     guest.setPgDetails(pgdetails);
                     guest.setOwner(pgdetails.getOwner());
                     try {

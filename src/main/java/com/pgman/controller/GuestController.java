@@ -57,17 +57,13 @@ public class GuestController {
 
     // Common data
     @ModelAttribute
-    public void commonData(Model model, Principal principal,HttpSession session) {
+    public void commonData(Model model, Principal principal,HttpSession session, HttpServletRequest request) {
         logger.info("This is Guest Controller");
         guest = guestRepository.findByEmail(principal.getName());
-
+        
         try {
             List<Payments> payments = paymentService.getAllPaymentByGuest(guest);
             model.addAttribute("payment", payments);
-            // for(Payments pay:payments) {
-            //     System.out.println("Amounts: "+pay.getAmount());
-            //     System.out.println("Status: "+pay.getStatus());
-            // }
         } catch (Exception e) {
             model.addAttribute("payment", new Payments());
             e.printStackTrace();
@@ -104,15 +100,17 @@ public class GuestController {
                 rat.addFlashAttribute("error","file is empty"); 
             } else {
                 String filename = SaveDocFile.savefile("GUEST", "doc", 
-                guest.getEmail(), guest.getId(), file); 
+                guest.getName(), guest.getId(), file); 
                 guest.setDocument(filename);
+                logger.info("Files are uploaded");
                 guestService.updateGuest(guest.getId(), guest);     
-                rat.addFlashAttribute("success","Details are saved");     
+                rat.addFlashAttribute("success","Details are saved"); 
+                logger.info("Details are saved");    
             }
             return "redirect:/guest/dashboard";
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
+            logger.error("{}", e);
         }
         return "redirect:/guest/dashboard";
     }
@@ -122,5 +120,30 @@ public class GuestController {
     public String guestProfile(Model model) {
         model.addAttribute("title", guest.getName());
         return "guestviews/guestprofile";
+    }
+
+    // update guest profile
+    @PostMapping("/update-details")
+    public String updateGuest(@ModelAttribute Guest guest, 
+    @RequestParam("dp") MultipartFile file, RedirectAttributes rat) {
+
+        if(file.isEmpty()) {
+
+        } else {
+            try {
+                String filename = SaveDocFile.savefile("GUEST", "DP", 
+                guest.getName(), guest.getId(), file);
+                guest.setProfile(filename);
+                guestService.updateGuest(guest.getId(), guest);
+                logger.info("Update successfully");
+                rat.addFlashAttribute("success","Updated successfully");
+                return "redirect:/guest/dashboard";
+            } catch (Exception e) {
+               logger.error("{}", e.getMessage());
+               rat.addFlashAttribute("error","Something went wrong on Server !!");
+               return "redirect:/guest/dashboard";
+            }
+        }
+        return "redirect:/guest/dashboard";
     }
 }

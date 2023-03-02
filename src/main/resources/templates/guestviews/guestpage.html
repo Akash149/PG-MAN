@@ -19,7 +19,7 @@
                 <div class="card">
                     <!-- <img th:src="${'/image/'+guest.profile}" alt="" class="profile-photo top-profile"> -->
                     <div class="user-profile">
-                        <img th:src="${'/image/'+guest.profile}" alt="" class="profile-photo top-profile">
+                        <img th:src="${'/image/guest/'+guest.getProfile}" alt="" class="profile-photo top-profile">
                         <h2 th:text="${guest.name}" class="text-center mt-2"></h2>
                     </div>
                     <div class="container text-center">
@@ -81,7 +81,7 @@
                             </tr>
                         </table>
                         <div th:if="${guest.enabled}" >
-                            <a href="#" class="btn btn-block btn-success"> Edit</a>
+                            <button type="button" class="btn btn-block btn-success" data-toggle="modal" data-target="#update-modal"> Edit</button>
                         </div>
                         <div th:if="${!guest.enabled}" >
                             <button type="button" class="btn btn-block btn-warning" data-toggle="modal" data-target="#add-modal"> Add details</button>
@@ -177,7 +177,7 @@
             </div>
            </div>
 
-            <!-- add modal -->
+            <!-- add details modal -->
             <div class="modal fade" id="add-modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -203,31 +203,93 @@
                                 <div class="form-group">
                                     <label for="guest-city">City name</label>
                                     <input type="text" name="city" class="form-control" id="user_name"
-                                        placeholder="Enter city name" required>
+                                        placeholder="Enter city name" th:value="${guest.address != null ? guest.address.city : ''}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="guest-city">Street name</label>
                                     <input type="text" name="street" class="form-control" id="user_name"
-                                        placeholder="Enter street neame" required>
+                                        placeholder="Enter street neame" th:value="${guest.address != null ? guest.address.street : ''}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="guest-city">State name</label>
                                     <input type="text" name="state" class="form-control" id="user_name"
-                                        placeholder="Enter state name" required>
+                                        placeholder="Enter state name" th:value="${guest.address != null ? guest.address.state : ''}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="guest-city">Pin code</label>
                                     <input type="text" name="pinCode" class="form-control" id="user_name"
-                                        placeholder="Enter pincode name" required>
+                                        placeholder="Enter pincode name" th:value="${guest.address != null ? guest.address.pinCode : ''}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="guest-city">country name</label>
                                     <input type="text" name="country" class="form-control" id="user_name"
-                                        placeholder="Enter country name" required>
+                                        placeholder="Enter country name" th:value="${guest.address != null ? guest.address.country : ''}" required>
                                 </div>
                                 <div class="form-group">
                                     <input type="file" name="document" class="form-control" id="document">
                                     <small class="form-text text-muted">Document should be government Authorized</small>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-block btn-success">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- update details model -->
+            <div class="modal fade" id="update-modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <!-- message -->
+                        <div th:if="${session.message}" class="text-center">
+                            <div th:classappend="${'alert-'+session.message.type}" class="alert alert mt-3" role="alert">
+                                <span th:text="${session.message.content}"></span>
+                            </div>
+                        </div>
+
+                        <div class="modal-body">
+                            <form class="mx-1 mx-md-4" th:action="@{'/guest/update-details'}" method="post"
+                                th:object="${guest}" enctype="multipart/form-data">
+
+                                <!-- User Name -->
+                                <div class="form-group">
+                                    <label for="guest-name">Name</label>
+                                    <input type="text" name="name" class="form-control" id="user_name"
+                                        placeholder="Enter name" th:value="${guest.name}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="guest-email">email</label>
+                                    <input type="email" name="email" class="form-control" id="user_email"
+                                        placeholder="Enter email" th:value="${guest.email}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="guest-mobile">Mobile No.</label>
+                                    <input type="number" name="phone" class="form-control" id="user_mobile"
+                                        placeholder="Enter mobile No." th:value="${guest.phone}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="guest-city">Occupation</label>
+                                    <input type="text" name="occupation" class="form-control" id="user_occupation"
+                                        placeholder="Enter occupation" th:value="${guest.occupation}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="guest-dob">DOB</label>
+                                    <input type="text" name="dob" class="form-control" id="user_name"
+                                     required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" name="dp" class="form-control" id="document">
+                                    <small class="form-text text-muted">Upload only image file</small>
                                 </div>
                                 <div>
                                     <button type="submit" class="btn btn-block btn-success">Save</button>
