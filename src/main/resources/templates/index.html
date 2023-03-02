@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <section class="banner d-flex justify-content-center align-items-center">
+        <div class="container text-center ">
+            <h1 class="text-white">Welcom to PGMAN</h1>
+            <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Quibusdam dolor asperiores quisquam ad natus aspernatur fuga 
+            dignissimos facere ipsam culpa delectus assumenda, mollitia quia 
+            corrupti nisi molestias aliquid sunt necessitatibus?</p>
+            <a class="btn btn-success" th:href="signup">Get Start</a>
+            <a class="btn btn-success" th:href="@{/guest/dashboard}">Get Start</a>
+        </div>
+    </section>   
+</body>
+</html>

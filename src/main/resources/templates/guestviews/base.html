@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/4.0.0/font/MaterialIcons-Regular.ttf" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/gstyle.css}">
+    <title th:text="${title}">Home</title>
+</head>
+
+<body>
+
+    <!-- starting of Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">PGMAN</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <img th:src="${'/image/'+guest.profile}" class="img-fluid" style="height: 40px; width: 40px;"
+                        alt="">
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"><span th:text="${guest.name}"></span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/"><i class="fa-solid fa-house"></i><span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="${signup}"><i class="fa-solid fa-user-plus"></i></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="login"><i class="fa-solid fa-right-to-bracket"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Ending of Navbar -->
+
+    <!-- starting of sidebar -->
+    <div class="sidebar">
+        <span onclick="toggleSidebar()" class="crossBtn">
+            &times;
+        </span>
+        <a id="home-link" href="#" class="item active"><i class="fa-sharp fa-solid fa-grid-horizontal"></i>
+            Dashboard</a>
+        <a id="profile-link" href="#" class="item"><i class="fa-solid fa-user"></i> Profile</a>
+        <a id="settings-link" href="#" class="item"><i class="fa-solid fa-gear"></i> Settings</a>
+        <a th:href="@{/logout}" class="item"><i class="fa-solid fa-sign-out-alt"></i> LogOut</a>
+    </div>
+    <!-- Ending of sidebar -->
+
+    <!-- Starting of content area -->
+    <div class="content">
+        <i onclick="toggleSidebar()" class="fas fa-bars m-3"></i>
+
+        <!-- Alert message -->
+        <div th:if="${success}" class="alert alert-success text-center" role="alert" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger text-center" role="alert" th:text="${error}"></div>
+
+        <div th:replace="${content}"></div>
+    </div>
+    <!-- ending of content area -->
+
+    <script th:src="@{/script/script.js}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

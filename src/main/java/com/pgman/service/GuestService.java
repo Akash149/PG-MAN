@@ -1,0 +1,40 @@
+package com.pgman.service;
+
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+import com.pgman.entities.Address;
+import com.pgman.entities.Guest;
+
+@Service
+public interface GuestService {
+
+    //1. save guest
+    public Guest createGuest(Guest guest);
+
+    //2. Get all guest
+    public List<Guest> allGuest();
+
+    //3. update a guest
+    public Guest updateGuest(String id, Guest guest);
+
+    //4. Delete a guest by id
+    public void deleteGuest(String id);
+
+    //5. Get a guest by id
+    public Guest getGuestById(String id);
+
+    //6. Get a guest by email or username
+    public Guest getGuestByEmail(String email);
+
+    //7. Exist or not find by email
+    public boolean isExistByEmail(String email);
+
+    //8. Exist or not find by email
+    public boolean isExistByPhone(String phone);
+
+    //9. update/add guest address
+    public Guest updateAddress(String guestId, Address address);
+
+    
+}

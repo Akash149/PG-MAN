@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="ownerviews/base::layout(~{::section})">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <section>
+        <div class="container text-center ">
+            <h1>This is <span th:text="${pg.name}"></span></h1>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card text-center">
+                        <div class="row">
+                            <div class="col">
+                                <table class="table mt-2">
+                                    <tr>
+                                        <th>Name</th>
+                                        <td th:text="${pg.name}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Floor</th>
+                                        <td th:text="${pg.totalfloor}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Room</th>
+                                        <td th:text="${pg.totalRoom}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Registered</th>
+                                        <td th:text="${pg.regDate}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Profile</th>
+                                        <td th:text="${pg.profile}"></td>
+                                    </tr>
+                                </table>
+                                <div class="container text-center">
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="button" class="btn btn-block btn-success" data-toggle="modal"
+                                                data-target="#add-modal">Edit</button>
+                                        </div>
+                                        <div class="col">
+                                            <a href="#" class="btn btn-block btn-warning">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card">
+                        <div class="container">
+                            <h2 class="text-muted">Guests</h2>
+                            <div th:if="${gsts.size == 0 || gsts == null}">
+                                <h2 class="text-danger">No guests are avialiable</h2>
+                            </div>
+                            <table class="table" th:if="${gsts.size() != 0}">
+                                <thead>
+                                    <tr>
+                                        <th>Dp</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tr th:each="guest : ${gsts}">
+                                    <td>
+                                        <img class="sm-profile" th:src="${'/image/guest/'+guest.profile}" alt="">
+                                    </td>
+                                    <td>
+                                        <a href="#"><span th:text="${guest.name}"></span></a>   
+                                    </td>
+                                    <td th:classappend="${guest.enabled == true ? 'text-success' : 'text-danger'}">
+                                        <span th:text="${guest.enabled == true ? 'Active' : 'Deactive'}"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <a th:href="@{/owner/download-guest-details}" class="btn btn-block btn-success">Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- add modal -->
+        <div class="modal fade" id="add-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- message -->
+                    <div th:if="${session.message}" class="text-center">
+                        <div th:classappend="${'alert-'+session.message.type}" class="alert alert mt-3" role="alert">
+                            <span th:text="${session.message.content}"></span>
+                        </div>
+                    </div>
+
+                    <!-- PG MODAL BODY -->
+                    <div class="modal-body">
+                        <form class="mx-1 mx-md-4" th:action="@{'/update/pg-details'}" method="post"
+                            th:object="${pgDetails}" enctype="multipart/form-data">
+
+                            <!-- PG Name -->
+                            <div class="form-group">
+                                <label for="pg-name">PG name</label>
+                                <input type="text" name="name" class="form-control" id="pg_name"
+                                    placeholder="Enter PG name" th:value="${pg.name}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="total-floor">Total floor</label>
+                                <input type="number" name="totalFloor" class="form-control" id="floor"
+                                    th:value="${pg.totalfloor}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guest-city">Total room</label>
+                                <input type="number" name="totalRoom" class="form-control" id="room"
+                                    th:value="${pg.totalRoom}" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="document" class="form-control" id="document">
+                                <small class="form-text text-muted">choose your image</small>
+                            </div>
+                            <div>
+                                <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <script>
+            $(document).ready(function() {
+                console.log("Form loaded");
+                $('#update-pg').on('Save', function(event) {
+                    event.preventDefault();
+                    let form = new FormData(this);
+                    $.ajax({
+                        url: "/update/pg-details",
+                        type: 'POST',
+                        data: form,
+                        success: function (data, status, jqXHR) {
+                            console.log(data);
+                        }
+                    })
+                })
+            })
+        </script> -->
+    </section>
+</body>
+
+</html>

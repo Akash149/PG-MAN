@@ -1,0 +1,126 @@
+package com.pgman.controller;
+
+import java.security.Principal;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.pgman.dao.AddressRepository;
+import com.pgman.dao.GuestRepository;
+import com.pgman.entities.Address;
+import com.pgman.entities.Guest;
+import com.pgman.entities.Payments;
+import com.pgman.helper.Message;
+import com.pgman.helper.SaveDocFile;
+import com.pgman.service.GuestService;
+import com.pgman.service.PaymentService;
+import com.pgman.service.TransactionService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+
+@Controller
+@RequestMapping("/guest")
+public class GuestController {
+
+    // Logger factory SL4j
+    Logger logger = LoggerFactory.getLogger(GuestController.class);
+
+    @Autowired
+    private GuestRepository guestRepository;
+
+    @Autowired
+    private GuestService guestService;
+
+    @Autowired
+    PaymentService paymentService;
+
+    @Autowired
+    TransactionService transactionService;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    private Guest guest;
+
+    // Common data
+    @ModelAttribute
+    public void commonData(Model model, Principal principal,HttpSession session) {
+        logger.info("This is Guest Controller");
+        guest = guestRepository.findByEmail(principal.getName());
+
+        try {
+            List<Payments> payments = paymentService.getAllPaymentByGuest(guest);
+            model.addAttribute("payment", payments);
+            // for(Payments pay:payments) {
+            //     System.out.println("Amounts: "+pay.getAmount());
+            //     System.out.println("Status: "+pay.getStatus());
+            // }
+        } catch (Exception e) {
+            model.addAttribute("payment", new Payments());
+            e.printStackTrace();
+        }
+
+        if (guest.getAddress() == null) {
+            guest.setAddress(new Address());
+        }
+
+        if (guest.getAddress() !=null || guest.isEnabled() == false) {
+            session.setAttribute("message", 
+            new Message("success","You have added your details. please, wait for owner's verification !!"));
+        }
+
+        model.addAttribute(guest);
+        System.out.println(guest);
+    }
+
+    @GetMapping("/dashboard")
+    public String guestDashboard(Model model) {
+        model.addAttribute("title", guest.getName());
+        return "guestviews/guestpage";
+    } 
+
+    // Add document and address details
+    @PostMapping("/add-details")
+    public String addDetails(@ModelAttribute Address address, 
+    @RequestParam("document") MultipartFile file, 
+    RedirectAttributes rat, HttpServletRequest request ) {
+        // System.out.println(address);
+        try {
+            guest.setAddress(address);
+            if(file.isEmpty()) {
+                rat.addFlashAttribute("error","file is empty"); 
+            } else {
+                String filename = SaveDocFile.savefile("GUEST", "doc", 
+                guest.getEmail(), guest.getId(), file); 
+                guest.setDocument(filename);
+                guestService.updateGuest(guest.getId(), guest);     
+                rat.addFlashAttribute("success","Details are saved");     
+            }
+            return "redirect:/guest/dashboard";
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "redirect:/guest/dashboard";
+    }
+
+    // Edit guest profile 
+    @GetMapping("/profile")
+    public String guestProfile(Model model) {
+        model.addAttribute("title", guest.getName());
+        return "guestviews/guestprofile";
+    }
+}
