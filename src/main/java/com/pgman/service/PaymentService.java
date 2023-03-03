@@ -23,6 +23,6 @@ public interface PaymentService {
     public void updatePayment(int id, Payments payment);
 
     //5. get all payments by guest
-    public List<Payments> getAllPaymentByGuest(Guest guest) throws Exception;
+    public List<Payments> getAllPaymentByGuest(Guest guest);
     
 }

@@ -1,7 +1,10 @@
 package com.pgman.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.entities.Guest;
@@ -10,6 +13,8 @@ import com.pgman.service.PaymentService;
 import com.pgman.dao.PaymentsRepository;
 
 public class PaymentServiceImpl implements PaymentService {
+
+    static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class); 
 
     @Autowired
     private PaymentsRepository paymentRepo;
@@ -29,7 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new Exception("Resource Not found");
             }
        } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("{} {}", id, "not Found in repository");
        }
     }
 
@@ -48,20 +53,25 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new Exception("Resource Not found");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("{} {}", id, "not Found in repository");
         }  
     }
 
     @Override
-    public List<Payments> getAllPaymentByGuest(Guest guest) throws Exception {   
+    public List<Payments> getAllPaymentByGuest(Guest guest) {   
         List<Payments> payments = null;
         payments = paymentRepo.findByGuest(guest);
         
+       try {
         if(payments != null) {
             return payments;
         } else {
             throw new Exception("Payments not found");
         }
+       } catch (Exception e) {
+            logger.warn("{} {}", guest.getId(), "not Found in repository");
+            return new ArrayList<Payments>();
+       }
     }  
      
 }

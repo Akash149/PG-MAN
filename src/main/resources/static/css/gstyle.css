@@ -104,6 +104,8 @@ small {
     width: 4.8rem;
     height: 4.8rem;
     border-radius: 50%;
+    border-color: #7380ec;
+    border-width: 3px;
     overflow: hidden;
 }
 

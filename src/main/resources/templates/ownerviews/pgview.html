@@ -74,14 +74,17 @@
                                         <img class="sm-profile" th:src="${'/image/guest/'+guest.profile}" alt="">
                                     </td>
                                     <td>
-                                        <a href="#"><span th:text="${guest.name}"></span></a>   
+                                        <!-- <a th:href="${pg.id}+'/'+${pg.name.replace(' ','-')}" class="my-3"><span th:text="${pg.name}"></span></a> -->
+                                        <a th:href="${guest.id}+'/'+${guest.name.replace(' ','-')}"><span th:text="${guest.name}"></span></a>   
                                     </td>
                                     <td th:classappend="${guest.enabled == true ? 'text-success' : 'text-danger'}">
                                         <span th:text="${guest.enabled == true ? 'Active' : 'Deactive'}"></span>
                                     </td>
                                 </tr>
                             </table>
-                            <a th:href="@{/owner/download-guest-details}" class="btn btn-block btn-success">Download</a>
+                            <div th:if="${gsts.size != 0 && gsts != null}">
+                                <a th:href="@{/owner/download-guest-details}" class="btn btn-block btn-success">Download</a>
+                            </div>
                         </div>
                     </div>
                 </div>

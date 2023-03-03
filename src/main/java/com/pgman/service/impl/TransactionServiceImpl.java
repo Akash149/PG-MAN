@@ -2,6 +2,8 @@ package com.pgman.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.entities.Guest;
@@ -11,6 +13,8 @@ import com.pgman.service.TransactionService;
 import com.pgman.dao.TransactionsRepository;
 
 public class TransactionServiceImpl implements TransactionService {
+
+    Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
     @Autowired
     private TransactionsRepository transactionRepo;
@@ -26,6 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
            transactionRepo.deleteById(id);;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}",e.getMessage());
         }
     }
 
@@ -36,6 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
             tr = transactionRepo.getReferenceById(id);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}",e.getMessage());
         }
         return tr;
     }
@@ -47,6 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
             trs = transactionRepo.findAll();
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}",e.getMessage());
         }
         return trs;
     }
@@ -58,6 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
             trs = transactionRepo.findByGuestAndOwner(guest, owner);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}",e.getMessage());
         }
         return trs;
     }
@@ -69,6 +77,7 @@ public class TransactionServiceImpl implements TransactionService {
             tr = transactionRepo.save(transactions);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}",e.getMessage());
         }
         return tr;
     }
@@ -80,8 +89,21 @@ public class TransactionServiceImpl implements TransactionService {
             trs = transactionRepo.findByOwner(owner);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}",e.getMessage());
         }
         return trs;
+    }
+
+    @Override
+    public List<Transactions> getTransactionOfGuestAndOwner(Guest guest, Owner owner) {
+        
+        try {
+            return transactionRepo.findByGuestAndOwner(guest, owner);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("{}",e.getMessage());
+        }
+        return null;
     }
 
     

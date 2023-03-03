@@ -31,5 +31,8 @@ public interface TransactionService {
 
     //7. Get Transaction by owner
     public List<Transactions> getTransactionByOwner(Owner owner);
+
+    //8. Get Transactions by guest and owner
+    public List<Transactions> getTransactionOfGuestAndOwner(Guest guest, Owner owner);
     
 }

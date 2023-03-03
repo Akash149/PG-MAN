@@ -2,6 +2,9 @@ package com.pgman.service.impl;
 
 import com.pgman.service.GuestService;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.dao.AddressRepository;
@@ -11,6 +14,8 @@ import com.pgman.entities.Guest;
 import com.pgman.helper.IdCreator;
 
 public class GuestServiceImpl implements GuestService{
+
+    static final Logger logger  = LoggerFactory.getLogger(GuestServiceImpl.class);
     
     @Autowired
     private GuestRepository guestRepository;
@@ -28,7 +33,7 @@ public class GuestServiceImpl implements GuestService{
             Guest us = this.guestRepository.save(guest);
             return us;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e.getMessage());
             return null;
         }
     }
@@ -40,12 +45,22 @@ public class GuestServiceImpl implements GuestService{
 
     @Override
     public void deleteGuest(String id) {
-        guestRepository.deleteById(id);
+        try {
+            guestRepository.deleteById(id);
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+        }
+        
     }
 
     @Override
     public Guest getGuestByEmail(String email) {
-        return guestRepository.findByEmail(email);
+        try {
+            return guestRepository.findByEmail(email);
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -54,6 +69,7 @@ public class GuestServiceImpl implements GuestService{
         if (guest != null) {
             return guest;
         } else {
+            logger.warn("{} {}", id, "not Found in repository");
             return null;
         }   
     }
@@ -64,6 +80,7 @@ public class GuestServiceImpl implements GuestService{
         if (guest != null) {
             return this.guestRepository.save(guest);
         } else {
+            logger.warn("{} {}", id, "not Found in repository");
             return null;
         }
     }
@@ -72,9 +89,9 @@ public class GuestServiceImpl implements GuestService{
     public boolean isExistByEmail(String email) {
         Guest guest = this.guestRepository.findByEmail(email);
         if(guest != null) {
-            System.out.println(guest);
             return true;
         }
+        logger.warn("{} {}", email, "not Found in repository");
         return false;
     }
 
@@ -85,6 +102,7 @@ public class GuestServiceImpl implements GuestService{
             System.out.println(guest);
             return true;
         }
+        logger.warn("{} {}", phone, "not Found in repository");
         return false;
     }
 
@@ -99,6 +117,7 @@ public class GuestServiceImpl implements GuestService{
             }
             return this.guest;
         } else {
+            logger.warn("{} {}", guestId, "not Found in repository");
             return null;
         }
         
