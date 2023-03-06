@@ -1,5 +1,7 @@
 package com.pgman.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -35,6 +37,9 @@ public interface GuestService {
 
     //9. update/add guest address
     public Guest updateAddress(String guestId, Address address);
+
+    //10. Get recent guests pagination
+    public Page<Guest> getRecentGuest(String ownerId, Pageable pageable);
 
     
 }

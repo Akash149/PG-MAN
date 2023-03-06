@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.pgman.entities.PgDetails;
 import com.pgman.entities.Owner;
+import com.pgman.entities.pg.PgDetails;
 
 @Service
 public interface PgService {

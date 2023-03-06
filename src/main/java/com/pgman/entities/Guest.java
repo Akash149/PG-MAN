@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.pgman.entities.pg.Floor;
+import com.pgman.entities.pg.PgDetails;
+import com.pgman.entities.pg.Room;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -74,6 +79,12 @@ public class Guest {
     @JoinColumn(name = "OWNER")
     @ManyToOne
     private Owner owner;
+
+    @OneToOne
+    Floor floor;
+
+    @OneToOne
+    Room room;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Address address;

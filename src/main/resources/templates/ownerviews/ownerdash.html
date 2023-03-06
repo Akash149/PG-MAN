@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="ownerviews/base::layout(~{::section})">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <section>
+        <div class="container-fluid p-2">
+            <h1 class="text-center">Dashboard</h1>
+            <div class="row">
+
+                <!-- column 1 -->
+                <div class="col-lg-6 col-12">
+                    <!-- owner details -->
+                    <div class="card">
+                        <div class="user-profile">
+                            <img th:src="${'/image/owner/'+owner.profile}" alt="" class="profile-photo top-profile">
+                            <h2 th:text="${owner.name}" class="text-center mt-2"></h2>
+                        </div>
+                        <div class="container text-center">
+                            <table class="text-center mt-2">
+                                <tr>
+                                    <th>ID</th>
+                                    <td th:text="${owner.id}" class="text-muted"></td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td th:if="${owner.enabled}" class="text-success">Active</td>
+                                    <td th:if="${!owner.enabled}" class="text-danger">Deactive</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Email</th>
+                                    <td th:text="${owner.email}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Mobile</th>
+                                    <td th:text="${owner.phoneNo}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Occupation</th>
+                                    <td th:text="${owner.occupation}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Gender</th>
+                                    <td th:text="${owner.gender}"></td>
+                                </tr>
+                                <tr>
+                                    <th>DOB</th>
+                                    <td th:text="${#dates.format(owner.dob,'dd-MM-yyyy')}"></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th>Registered on</th>
+                                    <td th:text="${#dates.format(owner.regDate,'dd-MM-yyyy')}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Address</th>
+                                    <td th:text="${owner.address}"></td>
+                                </tr>
+                            </table>
+                            <div th:if="${owner.enabled}">
+                                <a href="#" class="btn btn-block btn-success"> Edit</a>
+                            </div>
+                            <div th:if="${!owner.enabled}">
+                                <button type="button" class="btn btn-block btn-warning" data-toggle="modal"
+                                    data-target="#add-modal"> Add details</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Recent guests details -->
+                    <div class="card">
+                        <h2 class="text-center text-muted">Recent guests</h2>
+                        <div class="container-fluid">
+                            <!-- <div th:if="${rguest.size == 0 || rguest == null}">
+                                <h2 class="text-danger">No guests are avialiable</h2>
+                            </div> -->
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Dp</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tr th:each="guest : ${rguest}">
+                                    <td>
+                                        <img class="sm-profile" th:src="${'/image/guest/'+guest.profile}" alt="">
+                                    </td>
+                                    <td>
+                                        <a th:href="${guest.id}+'/'+${guest.name.replace(' ','-')}"><span
+                                                th:text="${guest.name}"></span></a>
+                                    </td>
+                                    <td th:classappend="${guest.enabled == true ? 'text-success' : 'text-danger'}">
+                                        <span th:text="${guest.enabled == true ? 'Active' : 'Deactive'}"></span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- colume 2 -->
+                <div class="col-lg-6 col-12">
+                    <!-- PG information -->
+                    <div class="card" style="min-height: 50px;">
+                        <div class="container-fluid pginfo">
+                            <span class="material-icons-sharp text-center">home</span>
+                            <h2 class="text-center text-muted">PG information</h2>
+                        </div>
+                        <div th:if="${pgs == null}">
+                            <div class="container text-center">
+                                <h2 class="text-wanring">You have not added any PG</h2>
+                            </div>
+                        </div>
+                        <div class="container mt-2" th:if="${pgs != null}">
+                            <div class="row pg-sortinfo">
+                                <div class="container text-center d-flex" th:each="pg : ${pgs}">
+                                    <img class="profile-photo" th:src="${'/image/pg/'+pg.profile}" alt="" />
+                                    <a th:href="${pg.id}+'/'+${pg.name.replace(' ','-')}" class="my-3">
+                                        <span th:text="${pg.name}"></span>
+                                    </a>
+                                    <span class="reg-date" th:text="${#dates.format(pg.regDate,'dd-MM-yyyy')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-block btn-success mt-4">Add PG</button>
+                    </div>
+
+                    <!-- Guest and owner Payment information -->
+                    <div class="payment-info">
+                        <div class="card" style="min-height: 50px;">
+                            <div class="container-fluid payments">
+                                <span class="material-icons-sharp text-center">currency_rupee</span>
+                                <h2 class="text-muted" style="font-weight: 600;">Recent Payments</h2>
+                            </div>
+
+                            <div th:if="${trans == null || trans.size() == 0}" class="container-fluid text-center">
+                                <h2 class="text-danger">You have no recent payments</h2>
+                            </div>
+
+                            <div class="container text-center mt-2" th:if="${trans != null || trans != 0}">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#ID</th>
+                                            <th>Status</th>
+                                            <th>Ref. No</th>
+                                            <th>Gateway</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="tr : ${trans}">
+                                            <td th:text="${tr.payments.id}"></td>
+                                            <td
+                                                th:classappend="${tr.payments.status.equals('failed') ? 'text-danger' : 'text-success'}">
+                                                <span th:text="${tr.payments.status}"></span>
+                                            </td>
+                                            <td th:text="${tr.payments.refNo}"></td>
+                                            <td th:text="${tr.payments.gateway}"></td>
+                                            <td th:classappend="${tr.payments.status.equals('failed') ? 'text-danger' : 'text-success'}"
+                                                style="font-weight: 700;">
+                                                <span th:text="${tr.payments.amount}"></span>
+                                            </td>
+                                            <td th:text="${#dates.format(tr.payments.date,'dd-MM-yyyy')}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+
+</html>

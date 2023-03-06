@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.pgman.dao.AddressRepository;
 import com.pgman.dao.GuestRepository;
@@ -122,5 +124,12 @@ public class GuestServiceImpl implements GuestService{
         }
         
     }
+
+    @Override
+    public Page<Guest> getRecentGuest(String ownerId, Pageable pageable) {
+        return guestRepository.findGuestByOwner(ownerId, pageable);
+    }
+
+    
 
 }

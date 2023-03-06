@@ -67,17 +67,22 @@
                             </tr>
                             <tr>
                                 <th>DOB</th>
-                                <td th:text="${guest.dob}"></td>
+                                <td th:text="${#dates.format(guest.dob,'dd-MM-yyyy')}"></td>
                             </tr>
                             
                             
                             <tr>
                                 <th>Registered on</th>
-                                <td th:text="${guest.regDate}"></td>
+                                <td th:text="${#dates.format(guest.regDate,'dd-MM-yyyy')}">
+                                    <span th:text="${#dates.hour(guest.regDate)}"></span>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Address</th>
-                                <td th:text="${guest.address.state+', '+guest.address.country}"></td>
+                                <td th:if="${guest.address.street == null}">Not avialiable</td>
+                                <td th:if="${guest.address.street != null}">
+                                    <span th:text="${guest.address.city + ', ' + guest.address.country}"></span>
+                                </td>
                             </tr>
                         </table>
                         <div th:if="${guest.enabled}" >
@@ -130,7 +135,7 @@
                                     style="font-weight: 700;">
                                         <span th:text="${pay.amount}" ></span>
                                     </td>
-                                    <td th:text="${pay.date}"></td>
+                                    <td th:text="${#dates.format(pay.date,'dd-MM-yyyy')}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -164,7 +169,7 @@
                                 </tr>
                                 <tr>
                                     <th>Registered</th>
-                                    <td th:text="${guest.pgDetails.regDate}"></td>
+                                    <td th:text="${#dates.format(guest.pgDetails.regDate,'dd-MM-yyyy')}"></td>
                                 </tr>
                                 <tr>
                                     <th>Profile</th>

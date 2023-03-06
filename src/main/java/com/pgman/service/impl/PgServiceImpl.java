@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.entities.Owner;
-import com.pgman.entities.PgDetails;
+import com.pgman.entities.pg.PgDetails;
 import com.pgman.service.PgService;
 import com.pgman.dao.PgRepository;
 

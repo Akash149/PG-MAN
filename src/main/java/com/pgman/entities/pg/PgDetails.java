@@ -1,7 +1,11 @@
-package com.pgman.entities;
+package com.pgman.entities.pg;
 
 import java.util.Date;
 import java.util.List;
+
+import com.pgman.entities.Address;
+import com.pgman.entities.Guest;
+import com.pgman.entities.Owner;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -51,6 +55,9 @@ public class PgDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pgDetails")
     // @Column(name = "GUEST")
-    private List<Guest> guest;   
+    private List<Guest> guest; 
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pgDetails")
+    private List<Floor> floor;
     
 }

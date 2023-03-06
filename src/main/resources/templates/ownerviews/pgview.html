@@ -38,7 +38,14 @@
                                         <th>Profile</th>
                                         <td th:text="${pg.profile}"></td>
                                     </tr>
+                                    <tr>
+                                        <th>Total Floor</th>
+                                        <td th:text="${pg.floor.size}"></td>
+                                    </tr>
                                 </table>
+                                <!-- <div th:each="flr : ${pg.floor}">
+                                    <h4>Name: <span th:text="${flr.name}"></span></h4>
+                                </div> -->
                                 <div class="container text-center">
                                     <div class="row">
                                         <div class="col">

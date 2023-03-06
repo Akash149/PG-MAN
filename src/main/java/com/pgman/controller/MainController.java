@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
 import com.pgman.entities.User;
-import com.pgman.entities.PgDetails;
+import com.pgman.entities.pg.PgDetails;
 import com.pgman.service.PgService;
 import com.pgman.helper.DateConvreter;
 import com.pgman.service.GuestService;

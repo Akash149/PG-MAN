@@ -44,11 +44,11 @@
                             </tr>
                             <tr>
                                 <th>Reg. Date</th>
-                                <td th:text="${guest.regDate}"></td>
+                                <td th:text="${#dates.format(guest.regDate,'dd-MM-yyyy')}"></td>
                             </tr>
                             <tr>
                                 <th>DOB</th>
-                                <td th:text="${guest.dob}"></td>
+                                <td th:text="${#dates.format(guest.dob,'dd-MM-yyyy')}"></td>
                             </tr>
                         </table>
                     </div>
@@ -92,7 +92,7 @@
                                             style="font-weight: 700;">
                                             <span th:text="${pay.amount}"></span>
                                         </td>
-                                        <td th:text="${pay.date}"></td>
+                                        <td th:text="${#dates.format(pay.date,'dd-MM-yyyy')}"></td>
                                     </tr>
                                 </tbody>
                             </table>

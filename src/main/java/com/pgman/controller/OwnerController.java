@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.pgman.dao.OwnerRepository;
 import com.pgman.entities.Owner;
 import com.pgman.entities.Payments;
-import com.pgman.entities.PgDetails;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Transactions;
+import com.pgman.entities.pg.PgDetails;
 import com.pgman.service.ExcelService;
 import com.pgman.service.GuestService;
 import com.pgman.service.PaymentService;
@@ -66,18 +69,18 @@ public class OwnerController {
     @ModelAttribute
     public void commonData(Model model, Principal principal) {
         owner = ownerRepository.findByEmail(principal.getName());
-        logger.info("Logged in Owner: " + owner.getName());
+        logger.info("Logged in Owner: {} ",owner.getName());
 
         pgs = pgService.getPgByOwner(owner);
         if (pgs != null) {
-            logger.info("PGs are Loaded count is " + pgs.size());
+            logger.info("PGs are Loaded count is {}", pgs.size());
         } else {
             logger.info("PGs are null");
         }
 
         transactions = transactionService.getTransactionByOwner(owner);
         if (transactions != null) {
-            logger.info("Owner Transactions are loaded, count is " + transactions.size());
+            logger.info("Owner Transactions are loaded, count is {}", transactions.size());
         } else {
             logger.info("Owner Transactions are null");
         }
@@ -88,10 +91,13 @@ public class OwnerController {
     }
 
     @GetMapping("/dashboard")
-    public String ownerDashboard(Model model) {
-        ;
+    public String ownerNewDashboard(Model model) {
+        //get recent 5 guests
+        Pageable pageable = PageRequest.of(0,5);
+        Page<Guest> guests = guestService.getRecentGuest(owner.getId(), pageable);
+        model.addAttribute("rguest", guests);
         model.addAttribute("title", owner.getName());
-        return "ownerviews/ownerpage";
+        return "ownerviews/ownerdash";
     }
 
     @GetMapping("/{id}/{name}")

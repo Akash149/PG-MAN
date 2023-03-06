@@ -2,8 +2,8 @@ package com.pgman.entities;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pgman.entities.pg.PgDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity; 

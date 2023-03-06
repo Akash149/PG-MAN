@@ -20,6 +20,12 @@ import com.pgman.service.impl.OwnerServiceImpl;
 import com.pgman.service.impl.PaymentServiceImpl;
 import com.pgman.service.impl.PgServiceImpl;
 import com.pgman.service.impl.TransactionServiceImpl;
+import com.pgman.service.pg.FlatService;
+import com.pgman.service.pg.FloorService;
+import com.pgman.service.pg.RoomService;
+import com.pgman.service.pg.impl.FlatServiceImpl;
+import com.pgman.service.pg.impl.FloorServiceImpl;
+import com.pgman.service.pg.impl.RoomServiceImpl;
 
 @Configuration
 @Component
@@ -67,7 +73,23 @@ public class MyConfig {
         return new TransactionServiceImpl();
     }
 
-    // TODO: DAO Anuthentication provider
+    // Floor service impl bean
+    @Bean
+    public FloorService getFloorService() {
+        return new FloorServiceImpl();
+    }
+
+    // Flat service impl bean
+    @Bean
+    public FlatService getFlatService() {
+        return new FlatServiceImpl();
+    }
+
+    // Room Service impl bean
+    @Bean
+    public RoomService getRoomService() {
+        return new RoomServiceImpl();
+    }
 
 
     // TODO: Authentication manager
