@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.pgman.dao.OwnerRepository;
 import com.pgman.entities.Owner;
 import com.pgman.entities.Payments;
+import com.pgman.entities.pg.Floor;
+import com.pgman.entities.pg.Flat;
+import com.pgman.entities.pg.Room;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Transactions;
 import com.pgman.entities.pg.PgDetails;
@@ -108,6 +111,15 @@ public class OwnerController {
                 if (this.owner.getId().equals(pgDetails.getOwner().getId())) {
                     guests = pgDetails.getGuest();
                     logger.info("Guests are loaded count is " + guests.size());
+                    for(Floor flr : pgDetails.getFloor()  ) {
+                        for(Flat flt : flr.getFlat()) {
+                            for(Room r : flt.getRoom()) {
+                                for(Guest g : r.getGuest()) {
+                                    logger.info("Guest is {}",g.getName());
+                                }
+                            }
+                        }
+                    }
                     model.addAttribute("pg", pgDetails);
                     model.addAttribute("gsts", guests);
 
@@ -123,6 +135,7 @@ public class OwnerController {
         return "redirect:/error-404-not-found";
     }
 
+    // Update PG details
     @PostMapping("/update/pg-details")
     public void updatePg(@ModelAttribute PgDetails pgDetails) {
         System.out.println(pgDetails.toString());

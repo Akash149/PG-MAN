@@ -45,6 +45,7 @@ public class Floor {
     PgDetails pgDetails;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "floor")
+    @JsonIgnore
     List<Flat> flat;
 
 }

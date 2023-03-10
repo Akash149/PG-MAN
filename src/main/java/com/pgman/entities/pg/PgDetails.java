@@ -53,11 +53,11 @@ public class PgDetails {
     @Column(name = "PROFILE")
     private String profile;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pgDetails")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "pgDetails")
     // @Column(name = "GUEST")
     private List<Guest> guest; 
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pgDetails")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "pgDetails")
     private List<Floor> floor;
     
 }

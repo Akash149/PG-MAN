@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.pgman.entities.pg.Flat;
 import com.pgman.entities.pg.Floor;
 import com.pgman.entities.pg.PgDetails;
 import com.pgman.entities.pg.Room;
@@ -80,11 +81,14 @@ public class Guest {
     @ManyToOne
     private Owner owner;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Floor floor;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Room room;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    Flat flat;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Address address;

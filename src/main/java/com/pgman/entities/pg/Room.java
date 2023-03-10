@@ -40,8 +40,8 @@ public class Room {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Guest> guest;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // @JsonIgnore
     Flat flat;
 
 }
