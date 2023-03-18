@@ -37,7 +37,7 @@ public class Floor {
     @Column(columnDefinition = "boolean default true")
     boolean status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "floor", fetch = FetchType.EAGER, orphanRemoval=true)
     List<Guest> guest;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -39,7 +39,7 @@ public class Flat {
 
     Date addedDate = new Date();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "flat", fetch = FetchType.EAGER, orphanRemoval=true)
     List<Guest> guest;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

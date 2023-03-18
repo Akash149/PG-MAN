@@ -53,6 +53,9 @@ public class PgDetails {
     @Column(name = "PROFILE")
     private String profile;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Policy policy;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "pgDetails")
     // @Column(name = "GUEST")
     private List<Guest> guest; 

@@ -31,8 +31,8 @@ public class SaveDocFile {
                 logger.info("Resource path: {}",saveto);
                 String[] type = file.getContentType().split("/");
                 String fname = name.replace(" ", "-") + id + "_" + types + "."+type[1];
-                logger.info("New file nam: {}",fname);
-                Path destination = Paths.get("C:/Users/sakas/OneDrive/Desktop/Work/pgman/src/main/resources/static/image/guest/"+fname);
+                logger.info("New file name: {}",fname);
+                Path destination = Paths.get("C:/Users/sakas/OneDrive/Desktop/git/PG-MAN/src/main/resources/static/image/guest/"+fname);
                 logger.info("File Type: {}",file.getContentType());
                 Path path = Paths.get(saveto + File.separator + fname);
                 logger.info("Path is {}",path.toFile().getAbsolutePath().toString());

@@ -70,7 +70,7 @@ public class Guest {
     private String document;
 
     @Column(name = "PAYMENTSTATUS")
-    private String paymentStatus;
+    private boolean paymentStatus;
 
     @Column(name = "REGDATE", updatable = false)
     @NotNull

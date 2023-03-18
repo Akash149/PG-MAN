@@ -1,5 +1,6 @@
 package com.pgman.service.pg.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class FloorServiceImpl implements FloorService {
         try {
             floorRepo.deleteById(id);
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("{}",e.getMessage());
         }
         

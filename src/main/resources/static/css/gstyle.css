@@ -4,7 +4,7 @@
 :root {
     --color-primary: #7380ec;
     --color-danger: #ff7782;
-    --color-success: #41f1b6;
+    --color-success: #1c9d72;
     --color-warning: #ffbb55;
     --color-white: #fff;
     --color-info-dark: #7d8da1;
@@ -274,7 +274,7 @@ small {
     color: white;
     padding: 5px;
     max-width: 250px;
-    justify-self: center;
+    margin-left: calc(50% - 250px / 2);
 }
 
 /* owner pg sort-info */
@@ -336,6 +336,12 @@ small {
     margin-top: -35px;
 }
 
+.add-ffr {
+    margin-top: -55px;
+    align-items: center;
+    align-content: center;
+}
+
 .flat-view {
     display: blox;
 }
@@ -348,4 +354,40 @@ small {
 
 .room-view span {
     margin-top: 10px;
+}
+
+.payment-status-false {
+    background: var(--color-danger) !important;
+    color: white;
+    border-radius: 8px;
+    max-height: 2rem;
+    padding: 5px;
+}
+
+.payment-status-true {
+    background: var(--color-success) !important;
+    color: white;
+    max-height: 2rem;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.custom-button {
+    background: var(--color-primary);
+    border-radius: 50%;
+    max-width: 40px;
+    max-height: 40px;
+    color: white;
+}
+
+.add {
+    background: var(--color-success) !important;
+}
+
+.update {
+    background: var(--color-warning) !important;
+}
+
+.delete {
+    background: var(--color-danger) !important;
 }

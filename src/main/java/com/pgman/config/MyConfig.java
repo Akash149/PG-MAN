@@ -22,9 +22,11 @@ import com.pgman.service.impl.PgServiceImpl;
 import com.pgman.service.impl.TransactionServiceImpl;
 import com.pgman.service.pg.FlatService;
 import com.pgman.service.pg.FloorService;
+import com.pgman.service.pg.PolicyService;
 import com.pgman.service.pg.RoomService;
 import com.pgman.service.pg.impl.FlatServiceImpl;
 import com.pgman.service.pg.impl.FloorServiceImpl;
+import com.pgman.service.pg.impl.PolicyServiceImpl;
 import com.pgman.service.pg.impl.RoomServiceImpl;
 
 @Configuration
@@ -91,6 +93,10 @@ public class MyConfig {
         return new RoomServiceImpl();
     }
 
+    // Policy Service impl bean
+    @Bean
+    public PolicyService getPolicyService() {
+        return new PolicyServiceImpl();
+    }
 
-    // TODO: Authentication manager
 }
