@@ -391,3 +391,19 @@ small {
 .delete {
     background: var(--color-danger) !important;
 }
+
+.document {
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: var(--color-dark);
+}
+
+.activated {
+    border-width: 1.5px;
+    border-color: var(--color-success) !important;
+}
+
+.deactivated {
+    border-width: 1.5px;
+    border-color: var(--color-danger) !important;
+}

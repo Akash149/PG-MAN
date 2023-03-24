@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="ownerviews/base::layout(~{::section})">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 </head>
+
 <body>
     <section>
         <div class="container-fluid text-center">
-            
+
             <div class="row">
                 <div class="col">
                     <div class="card">
@@ -22,25 +24,50 @@
                                 </tr>
                                 <tr>
                                     <th>Total Floor</th>
-                                    <td th:text="${pg.totalfloor}"></td>
+                                    <td th:text="${pg.floor.size}"></td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>Total Flat</th>
+                                    <td th:text="${pg.floor.flat.size}"></td>
                                 </tr>
                                 <tr>
                                     <th>Total Room</th>
-                                    <td th:text="${pg.totalRoom}"></td>
-                                </tr>
+                                    <td th:text="${pg.floor.flat.room.size}"></td>
+                                </tr> -->
                                 <tr>
                                     <th>Registered</th>
                                     <td th:text="${#dates.format(pg.regDate,'dd-MM-yyyy')}"></td>
                                 </tr>
-                                <tr>
-                                    <th>Profile</th>
-                                    <td th:text="${pg.profile}"></td>
-                                </tr>
-                                <tr>
-                                    <th>Total Floor</th>
-                                    <td th:text="${pg.floor.size}"></td>
-                                </tr>
+
                             </table>
+
+                            <div class="card mb-3">
+                                <h2 class="text-muted">Address</h2>
+                                <div class="container-fluid text-center">
+                                    <table class="table mt-2">
+                                        <tr>
+                                            <th>Street</th>
+                                            <td th:text="${pg.address.street}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>City</th>
+                                            <td th:text="${pg.address.city}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pin code</th>
+                                            <td th:text="${pg.address.pinCode}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>State</th>
+                                            <td th:text="${pg.address.state}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Country</th>
+                                            <td th:text="${pg.address.country}"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                             <!-- <div th:each="flr : ${pg.floor}">
                                 <h4>Name: <span th:text="${flr.name}"></span></h4>
                             </div> -->
@@ -48,7 +75,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <button type="button" class="btn btn-block btn-success" data-toggle="modal"
-                                            data-target="#add-modal">Edit</button>
+                                            data-target="#editPg-modal">Edit</button>
                                     </div>
                                     <div class="col">
                                         <button type="button" class="btn btn-block btn-success" data-toggle="modal"
@@ -69,51 +96,55 @@
                         <div th:if="${pg.floor.size == 0 || pg.floor.size == null}">
                             <div class="container-fluid text-center">
                                 <h3 class="text-danger">You have not added the floor</h3>
-                                <button class="btn btn-success" type="button" data-target="#addFloor-modal" data-toggle="modal">
+                                <button class="btn btn-success" type="button" data-target="#addFloor-modal"
+                                    data-toggle="modal">
                                     <span>Add floor</span>
                                 </button>
                             </div>
                         </div>
-                        <div th:if="${pg.floor.size > 0 || pg.floor.size != null}" class="card mt-4" th:each="flr : ${pg.floor}">
+                        <div th:if="${pg.floor.size > 0 || pg.floor.size != null}" class="card mt-4"
+                            th:each="flr : ${pg.floor}">
                             <div class="container-fluid text-center">
                                 <h3 class="floor-name" th:text="${'Floor ' + flr.name}"></h3>
                                 <button type="button" title="Add Floor" class="btn add add-ffr custom-button">
                                     <i class="fa-solid fa-plus"></i>
-                                </button> 
+                                </button>
                                 <button type="button" title="Edit Floor" class="btn update add-ffr custom-button">
                                     <i class="fa-solid fa-pen-nib"></i>
-                                </button> 
-                                <button type="button" title="Delete Floor" th:onclick="|deleteFloor(${flr.id})|" class="btn delete add-ffr custom-button">
+                                </button>
+                                <button type="button" title="Delete Floor" th:onclick="|deleteFloor(${flr.id})|"
+                                    class="btn delete add-ffr custom-button">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                                 <div class="row">
                                     <!-- flat view -->
                                     <div class="card d-flex mr-3" th:each="flt : ${flr.flat}">
                                         <h3 class="floor-name" th:text="${flt.name}"></h3>
-                                         
+
                                         <div class="row">
                                             <!-- room view -->
                                             <div th:each="r : ${flt.room}">
                                                 <div class="card d-flex mr-2">
                                                     <h4 class="floor-name" th:text="${r.name}"></h4>
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
-                                
-                                 
+
+
                             </div>
                         </div>
                         <div class="container-fluid mt-3">
-                            <button type="button" title="Add Floor" class="btn add custom-button" data-target="#addFloor-modal" data-toggle="modal">
+                            <button type="button" title="Add Floor" class="btn add custom-button"
+                                data-target="#addFloor-modal" data-toggle="modal">
                                 <span><i class="fa-solid fa-plus"></i></span>
-                            </button> 
+                            </button>
                             <button type="button" title="Edit Floor" class="btn update custom-button">
                                 <span><i class="fa-solid fa-pen-nib"></i></span>
-                            </button> 
+                            </button>
                             <button type="button" title="Delete Floor" class="btn delete custom-button">
                                 <span><i class="fa-solid fa-trash-can"></i></span>
                             </button>
@@ -124,8 +155,8 @@
         </div>
 
 
-         <!-- add modal -->
-         <div class="modal fade" id="add-modal" tabindex="-1" aria-hidden="true">
+        <!-- Edit PG modal -->
+        <div class="modal fade" id="editPg-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -153,16 +184,7 @@
                                 <input type="text" name="name" class="form-control" id="pg_name"
                                     placeholder="Enter PG name" th:value="${pg.name}" required>
                             </div>
-                            <div class="form-group">
-                                <label for="total-floor">Total floor</label>
-                                <input type="number" name="totalFloor" class="form-control" id="floor"
-                                    th:value="${pg.totalfloor}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="guest-city">Total room</label>
-                                <input type="number" name="totalRoom" class="form-control" id="room"
-                                    th:value="${pg.totalRoom}" required>
-                            </div>
+
                             <div class="form-group">
                                 <input type="file" name="document" class="form-control" id="document">
                                 <small class="form-text text-muted">choose your image</small>
@@ -176,8 +198,8 @@
             </div>
         </div>
 
-         <!-- policy modal -->
-         <div class="modal fade" id="policy-modal" tabindex="-1" aria-hidden="true">
+        <!-- policy modal -->
+        <div class="modal fade" id="policy-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -205,14 +227,14 @@
                         <!-- Policy message Message -->
                         <div class="form-group">
                             <label for="pg-name">Message</label>
-                            <textarea class="form-control" name="message" placeholder="Enter Policy message"
-                             rows="3" required></textarea>
+                            <textarea class="form-control" name="message" placeholder="Enter Policy message" rows="3"
+                                required></textarea>
                         </div>
                         <!-- <h3 th:text="${pg.policy.message == null}"><span>message not avialiable</span></h3> -->
                         <div class="form-group">
                             <label for="pg-name">Rules</label>
-                            <textarea class="form-control" name="rule" placeholder="Enter Policy message"
-                             rows="3" required></textarea>
+                            <textarea class="form-control" name="rule" placeholder="Enter Policy message" rows="3"
+                                required></textarea>
                         </div>
                         <!-- <h3 th:text="${pg.policy.rule == null}"><span>message not avialiable</span></h3> -->
                         <div>
@@ -224,14 +246,15 @@
             </div>
         </div>
 
-         <!-- Add Floor modal -->
-         <div class="modal fade" id="addFloor-modal" tabindex="-1" aria-hidden="true">
+        <!-- Add Floor modal -->
+        <div class="modal fade" id="addFloor-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="container-fluid text-center">
                             <h2 class="modal-title text-muted"
-                                th:text="${pg.floor.size > 0 || pg.floor.size != null ? 'Add Floor' : 'Edit Floor'}"></h2>
+                                th:text="${pg.floor.size > 0 || pg.floor.size != null ? 'Add Floor' : 'Edit Floor'}">
+                            </h2>
                         </div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -255,7 +278,7 @@
                             <label for="pg-name">Name</label>
                             <input type="text" placeholder="Enter floor name" class="form-control" name="name">
                         </div>
-                       
+
                         <div>
                             <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
                         </div>
@@ -272,15 +295,16 @@
                     icon: "warning",
                     button: true,
                     dangerMode: true,
-                }) .then((willDelete) => {
-                    if(willDelete) {
-                        window.location = "/owner/delete/"+fid;
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        window.location = "/owner/delete/" + fid;
                     } else {
                         swal("Floor is not deleted");
                     }
                 });
             }
         </script>
-    </section>   
+    </section>
 </body>
+
 </html>

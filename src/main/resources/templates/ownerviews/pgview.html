@@ -43,11 +43,12 @@
                                     <td th:text="${pg.floor.size}"></td>
                                 </tr>
                             </table>
+                            <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')+'/details'}}" class="btn btn-success" target="_blank">Edit</a>
                         </div>
                     </div>
 
                     <!-- PG floor and room view -->
-                    <div class="card">
+                    <div class="card mb-3">
                         <div th:if="${pg.floor.size == 0 || pg.floor.size == null}">
                             <div class="container-fluid text-center">
                                 <h3 class="text-danger">You have not added the floor</h3>
@@ -62,15 +63,36 @@
                             th:each="flr : ${pg.floor}">
                             <div class="container-fluid text-center">
                                 <h3 class="floor-name" th:text="${'Floor ' + flr.name}"></h3>
+                                <div th:if="${#lists.isEmpty(flr.flat)}">
+                                    <p class="text-danger">Flats and rooms are not added</p>
+                                    <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}" target="_blank">
+                                        <i class="fa fa-plus fa-2x"></i>
+                                    </a>
+                                    <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                </div>
                                 <div class="row">
                                     <!-- flat view -->
                                     <div class="card d-flex mr-3" th:each="flt : ${flr.flat}">
                                         <h3 class="floor-name" th:text="${flt.name}"></h3>
+                                        <div th:if="${#lists.isEmpty(flt.room)}">
+                                            <p class="text-danger">Rooms are not added</p>
+                                            <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}" target="_blank">
+                                                <i class="fa fa-plus fa-2x"></i>
+                                            </a>
+                                            <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                        </div>
                                         <div class="row">
                                             <!-- room view -->
                                             <div th:each="r : ${flt.room}">
                                                 <div class="card d-flex mr-2">
                                                     <h4 class="floor-name" th:text="${r.name}"></h4>
+                                                    <div th:if="${#lists.isEmpty(flt.guest)}">
+                                                        <p class="text-danger">Guesets are not avialiable</p>
+                                                        <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}" target="_blank">
+                                                            <i class="fa fa-plus fa-2x"></i>
+                                                        </a>
+                                                        <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                                    </div>
                                                     <!-- guest view -->
                                                     <div th:each="gst : ${r.guest}">
                                                         <div class="room-view row d-flex">

@@ -14,7 +14,7 @@
 
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <div class="card">
+                    <div class="card " th:classappend="${guest.enabled ? 'activated' : 'deactivated'}">
                         <div class="container-fluid text-center">
                             <img class="profile-photo top-profile" th:src="${'/image/guest/'+guest.profile}" alt="">
                             <h1 class="text-center text-muted" th:text="${guest.name}"></h1>
@@ -63,6 +63,11 @@
                         <div th:if="${!guest.enabled}">
                             <a class=" btn btn-success btn-block" th:href="@{'/owner/'+${guest.pgDetails.id}+'/'+${guest.id}+'/activate'}">Activate</a>
                             <p class="text-muted mt-2">User is not Active, check and verify the document to activate the user</p>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn btn-block btn-warning mt-3" data-target="#cashCollect-modal"
+                            data-toggle="modal">Collect cash</button>
                         </div>
                     </div>
                 </div>
@@ -113,6 +118,7 @@
 
                     </div>
 
+                    <!-- Document details -->
                     <div class="card">
                         <h2 class="text-muted">Document</h2>
                         <p class="mt-3 text-danger" th:if="${guest.document == null}">
@@ -121,11 +127,84 @@
                         </p>
                         <div th:if="${guest.document != null}">
                             <a href=""><span th:text="${guest.document}"></span></a>
-                            <img class="mt-2" th:src="${'/image/guest/'+guest.document}" alt="">
+                            <img class="mt-2 document" th:src="${'/image/guest/'+guest.document}" alt="">
                         </div>
                     </div>
                 </div>
             </div>
+
+
+            <!-- modeal for cash collection  -->
+            <div class="modal fade" id="cashCollect-modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container-fluid text-center">
+                                <h2>Cash details</h2>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+    
+                        <!-- ADD FLOOR MODAL BODY -->
+                        <div class="modal-body">
+                            <div class="container-fluid text-center">
+                                <table class="table">
+                                    <tr>
+                                        <th>Name:</th>
+                                        <td th:text="${guest.name}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Staying in </th>
+                                        <div th:if="${guest.floor == null && guest.flat == null}">
+                                            <td class="text-danger">Room is not allocated</td>
+                                        </div>
+                                        <div th:if="${guest.floor != null && guest.flat != null}">
+                                            <td th:text="${'Floor ' + guest.floor.name+', '+ guest.flat.name}"></td>
+                                        </div>
+                                    </tr>
+                                </table>
+                                <form action="">
+                                    </div>
+                                    <div class="input-group form-group ">
+                                        <div class="input-group-text">
+                                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                                        </div>
+                                        <!-- <label for="cash-amount">Amount</label> -->
+                                        <input type="number" name="amount" class="form-control" id="amount"
+                                            placeholder="Enter amount" required>
+                                    </div>
+                                </form>
+        
+                                <div>
+                                    <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
+                                    <button type="submit" id="update-pg" class="btn btn-block btn-success">Collect</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function collectCash(amount) {
+                swal({
+                    title: "Are you sure?",
+                    text: "You are collected "+amount,
+                    icon: "warning",
+                    button: true,
+                    dangerMode: true,
+                }).then((willcollect) => {
+                    if (willcollect) {
+                        window.location = "/owner/delete/" + fid;
+                    } else {
+                        swal("Cash is not colleted");
+                    }
+                });
+            }
+            </script>
     </section>
 </body>
 

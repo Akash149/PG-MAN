@@ -143,12 +143,6 @@ public class OwnerController {
         return "redirect:/error-404-not-found";
     }
 
-    // Update PG details
-    @PostMapping("/update/pg-details")
-    public void updatePg(@ModelAttribute PgDetails pgDetails) {
-        System.out.println(pgDetails.toString());
-    }
-
     // Download guest details in excel format
     @GetMapping("/download-guest-details")
     public ResponseEntity<Resource> download() {
@@ -277,6 +271,12 @@ public class OwnerController {
         }
     }
 
+        // Update PG details
+        @PostMapping("/update/pg-details")
+        public void updatePg(@ModelAttribute PgDetails pgDetails) {
+            
+        }
+
     // Add floor handler
     @PostMapping("/{pgId}/add/floor")
     public String addFloor(@ModelAttribute Floor floor,
@@ -344,7 +344,7 @@ public class OwnerController {
         }
     }
 
-    // Activate the guest Account by owner
+    // Activate the guest account by owner
     @GetMapping("/{pgId}/{guestId}/activate")
     public String activateGuest(@PathVariable("pgId") String pgId,
     @PathVariable("guestId") String guestId, RedirectAttributes rat) {
@@ -368,7 +368,7 @@ public class OwnerController {
         }
     }
 
-    // Deactivate the guest Account by owner
+    // Deactivate the guest account by owner
     @GetMapping("/{pgId}/{guestId}/deactivate")
     public String deactivateGuest(@PathVariable("pgId") String pgId,
     @PathVariable("guestId") String guestId, RedirectAttributes rat) {

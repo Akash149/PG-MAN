@@ -1,6 +1,5 @@
 package com.pgman.service.pg.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -31,23 +30,14 @@ public class FloorServiceImpl implements FloorService {
 
     @Override
     public void deleteFloor(int id) {
-        try {
-            floorRepo.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("{}",e.getMessage());
-        }
-        
+        floorRepo.deleteById(id);  
     }
 
     @Override
     public Floor getAFloor(int id) {
         Floor f = null;
-        try {
-            f = floorRepo.getReferenceById(id);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
+        f = floorRepo.getReferenceById(id);
+
         return f;
     }
 
@@ -59,11 +49,8 @@ public class FloorServiceImpl implements FloorService {
     @Override
     public Floor updateFloor(int id, Floor floor) {
         Floor f = null;
-        try {
-            f = floorRepo.save(floor);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
+        f = floorRepo.save(floor);
+
         return f;
     }
     

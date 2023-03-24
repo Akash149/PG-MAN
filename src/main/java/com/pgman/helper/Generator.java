@@ -19,7 +19,7 @@ import com.pgman.entities.Guest;
 public class Generator {
 
     public static String[] HEADERS = {
-            "ID", "NAME", "DOB", "STATUS", "REG.DATE", "OCCUPATION"
+            "ID", "NAME", "DOB", "STATUS", "REG.DATE", "OCCUPATION", "Floor","Flat","Room"
     };
 
     private static Logger logger = LoggerFactory.getLogger(Generator.class);
@@ -59,6 +59,9 @@ public class Generator {
                 dataRow.createCell(3).setCellValue(status);
                 dataRow.createCell(4).setCellValue(g.getRegDate().toString());
                 dataRow.createCell(5).setCellValue(g.getOccupation());
+                // dataRow.createCell(5).setCellValue(g.getFloor().getName());
+                // dataRow.createCell(5).setCellValue(g.getFlat().getName());
+                // dataRow.createCell(5).setCellValue(g.getRoom().getName());
             }
 
             workbook.write(out);

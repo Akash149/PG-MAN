@@ -96,7 +96,7 @@
                                         <img class="sm-profile" th:src="${'/image/guest/'+guest.profile}" alt="">
                                     </td>
                                     <td>
-                                        <a th:href="${guest.id}+'/'+${guest.name.replace(' ','-')}"><span
+                                        <a th:href="${guest.pgDetails.id+'/'+guest.id}+'/'+${guest.name.replace(' ','-')}"><span
                                                 th:text="${guest.name}"></span></a>
                                     </td>
                                     <td th:classappend="${guest.enabled == true ? 'text-success' : 'text-danger'}">
