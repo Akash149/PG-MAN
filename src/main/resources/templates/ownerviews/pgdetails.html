@@ -91,7 +91,7 @@
                     </div>
 
 
-                    <div class="card">
+                    <div class="card mb-5">
                         <h1 class="text-muted tex-center">Floors and Rooms</h1>
                         <div th:if="${pg.floor.size == 0 || pg.floor.size == null}">
                             <div class="container-fluid text-center">
@@ -106,7 +106,7 @@
                             th:each="flr : ${pg.floor}">
                             <div class="container-fluid text-center">
                                 <h3 class="floor-name" th:text="${'Floor ' + flr.name}"></h3>
-                                <button type="button" title="Add Floor" class="btn add add-ffr custom-button">
+                                <button type="button" title="Add Flat" class="btn add add-ffr custom-button">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                                 <button type="button" title="Edit Floor" class="btn update add-ffr custom-button">
@@ -248,6 +248,48 @@
 
         <!-- Add Floor modal -->
         <div class="modal fade" id="addFloor-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="container-fluid text-center">
+                            <h2 class="modal-title text-muted"
+                                th:text="${pg.floor.size > 0 || pg.floor.size != null ? 'Add Floor' : 'Edit Floor'}">
+                            </h2>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- ADD FLOOR MODAL BODY -->
+                    <div class="modal-body">
+
+                        <div th:if="${pg.floor.size == 0}">
+                            <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
+                                th:object="${floor}">
+                        </div>
+                        <div th:if="${pg.floor != null && pg.floor.size > 0}">
+                            <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
+                                th:object="${floor}">
+                        </div>
+
+                        <!-- floor name -->
+                        <div class="form-group">
+                            <label for="pg-name">Name</label>
+                            <input type="text" placeholder="Enter floor name" class="form-control" name="name">
+                        </div>
+
+                        <div>
+                            <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Flat modal -->
+        <div class="modal fade" id="addFlat-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

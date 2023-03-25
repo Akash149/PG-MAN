@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,300,100,700,900');
+
 /* colours */
 .bg-primary {
     background-color: #2F4454!important;
@@ -15,6 +19,7 @@
 body, html {
     height: 100%;
     background: #e2e2e2;
+    
     /* background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%); */
 }
 
@@ -90,4 +95,11 @@ body, html {
     background: #e2e2e2;
     padding: 15px;
     border-radius: 20px;
+}
+
+.quotes {
+    font-weight: 800;
+    font-size: 2rem;
+    font-family: 'Roboto Slab', serif;
+
 }

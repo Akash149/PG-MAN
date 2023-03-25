@@ -3,6 +3,7 @@ package com.pgman.controller;
 import java.io.ByteArrayInputStream;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pgman.dao.OwnerRepository;
@@ -271,11 +273,11 @@ public class OwnerController {
         }
     }
 
-        // Update PG details
-        @PostMapping("/update/pg-details")
-        public void updatePg(@ModelAttribute PgDetails pgDetails) {
-            
-        }
+    // Update PG details
+    @PostMapping("/update/pg-details")
+    public void updatePg(@ModelAttribute PgDetails pgDetails) {
+
+    }
 
     // Add floor handler
     @PostMapping("/{pgId}/add/floor")
@@ -294,20 +296,19 @@ public class OwnerController {
                 pgd.setFloor(fl);
                 pgService.updatePg(id, pgd);
                 model.addAttribute("pg", pgd);
-                rat.addFlashAttribute("success","Floor " +floor.getName()+"Added sucessfully.");
-                logger.info("{}","Floor "+floor.getName()+" is added");
+                rat.addFlashAttribute("success", "Floor " + floor.getName() + "Added sucessfully.");
+                logger.info("{}", "Floor " + floor.getName() + " is added");
                 return "ownerviews/pgdetails";
             } else {
-                rat.addFlashAttribute("error","Something went wrong on server  !!");
+                rat.addFlashAttribute("error", "Something went wrong on server  !!");
                 return "ownerviews/pgdetails";
             }
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
-            rat.addFlashAttribute("error","Something went wrong on server  !!");
+            rat.addFlashAttribute("error", "Something went wrong on server  !!");
             return "ownerviews/pgdetails";
         }
     }
-
 
     // Delete floor by pg owner
     @GetMapping("/delete/{fid}")
@@ -331,7 +332,7 @@ public class OwnerController {
                     guestService.updateGuest(g.getId(), g);
                 }
                 floorService.deleteFloor(fid);
-                logger.info("Floor {}",flr.getName() + "is deleted ");
+                logger.info("Floor {}", flr.getName() + "is deleted ");
                 rat.addFlashAttribute("success", "Floor " + flr.getName() + " is deleted");
                 return "redirect:/owner/dashboard";
             } else {
@@ -347,17 +348,17 @@ public class OwnerController {
     // Activate the guest account by owner
     @GetMapping("/{pgId}/{guestId}/activate")
     public String activateGuest(@PathVariable("pgId") String pgId,
-    @PathVariable("guestId") String guestId, RedirectAttributes rat) {
+            @PathVariable("guestId") String guestId, RedirectAttributes rat) {
         Guest guest = null;
         try {
             guest = guestService.getGuestById(guestId);
-            
+
             if (guest.getPgDetails().getOwner().getId().equals(this.owner.getId())) {
                 guest.setEnabled(true);
                 guestService.updateGuest(guestId, guest);
-                logger.info("{}",guest.getName()+" is activated now");
-                rat.addFlashAttribute("success", guest.getName()+" is activated");
-                return "redirect:/owner/"+pgId+"/"+guestId+"/"+guest.getName().replace(" ", "-");
+                logger.info("{}", guest.getName() + " is activated now");
+                rat.addFlashAttribute("success", guest.getName() + " is activated");
+                return "redirect:/owner/" + pgId + "/" + guestId + "/" + guest.getName().replace(" ", "-");
             } else {
                 return "redirect:/access-denied";
             }
@@ -371,18 +372,18 @@ public class OwnerController {
     // Deactivate the guest account by owner
     @GetMapping("/{pgId}/{guestId}/deactivate")
     public String deactivateGuest(@PathVariable("pgId") String pgId,
-    @PathVariable("guestId") String guestId, RedirectAttributes rat) {
+            @PathVariable("guestId") String guestId, RedirectAttributes rat) {
         Guest guest = null;
         try {
             guest = guestService.getGuestById(guestId);
-            
+
             if (guest.getPgDetails().getOwner().getId().equals(this.owner.getId())) {
                 guest.setEnabled(false);
                 guestService.updateGuest(guestId, guest);
-                logger.info("{}",guest.getName()+" is deactivated now");
+                logger.info("{}", guest.getName() + " is deactivated now");
 
-                rat.addFlashAttribute("success", guest.getName()+" is deactivated");
-                return "redirect:/owner/"+pgId+"/"+guestId+"/"+guest.getName().replace(" ", "-");
+                rat.addFlashAttribute("success", guest.getName() + " is deactivated");
+                return "redirect:/owner/" + pgId + "/" + guestId + "/" + guest.getName().replace(" ", "-");
             } else {
                 return "redirect:/access-denied";
             }
@@ -392,5 +393,51 @@ public class OwnerController {
             return "redirect:/owner/dashboard";
         }
     }
+
+    // Cash collect by owner
+    @PostMapping("/collect-cash")
+    public String collectCash(@RequestParam("guestId") String guestId,
+            @RequestParam("amount") int amount, RedirectAttributes rat) {
+        Guest guest = null;
+        try {
+            guest = guestService.getGuestById(guestId);
+            if (amount > 0) {
+                // create a new payment
+                Payments payment = new Payments();
+                payment.setAmount(amount);
+                payment.setDate(new Date());
+                payment.setGateway("CASH");
+                payment.setRefNo(null);
+                payment.setStatus("Success");
+                payment.setGuest(guest);
+                paymentService.createPayment(payment);
+                logger.info("{}", "Payments of " + amount + " is saved");
+
+                // create a new transaction between guest and owner
+                Transactions transactions = new Transactions();
+                transactions.setGuest(guest);
+                transactions.setOwner(this.owner);
+                transactions.setPayments(payment);
+                transactionService.createTransaction(transactions);
+                logger.info("{}", "Transaction between " + guest.getName() + " and " + owner.getName()
+                        + " is saved. Transaction amount is " + amount);
+                rat.addFlashAttribute("success", "Amount " + amount + " successfully collected");
+                return "redirect:/owner/" + guest.getPgDetails().getId() + "/" + guestId + "/"
+                        + guest.getName().replace(" ", "-");
+            } else {
+                rat.addFlashAttribute("error", "Amount should be more than 0");
+                return "redirect:/owner/" + guest.getPgDetails().getId() + "/" + guestId + "/"
+                        + guest.getName().replace(" ", "-");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("{}", e.getMessage());
+            rat.addFlashAttribute("error", "Something went wrong on server");
+            return "redirect:/owner/dashboard";
+        }
+    }
+
+
+    
 
 }
