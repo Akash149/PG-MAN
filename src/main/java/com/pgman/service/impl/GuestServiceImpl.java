@@ -13,6 +13,7 @@ import com.pgman.dao.AddressRepository;
 import com.pgman.dao.GuestRepository;
 import com.pgman.entities.Address;
 import com.pgman.entities.Guest;
+import com.pgman.entities.Owner;
 import com.pgman.helper.IdCreator;
 
 public class GuestServiceImpl implements GuestService{
@@ -130,6 +131,10 @@ public class GuestServiceImpl implements GuestService{
         return guestRepository.findGuestByOwner(ownerId, pageable);
     }
 
-    
+    @Override
+    public List<Guest> getSearchedGuest(String name, Owner owner) {
+        guestRepository.findByNameContainingAndOwner(name, owner);
+        return null;
+    }
 
 }

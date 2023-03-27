@@ -438,6 +438,13 @@ public class OwnerController {
     }
 
 
-    
+    // Search guest by owner in guest list
+    @GetMapping("/search/{query}")
+    public ResponseEntity<?> search(@PathVariable("query") String query) {
+        logger.info(query);
+        List<Guest> guest = guestService.getSearchedGuest(query, this.owner);
+        // logger.info("Guest size is {}",guest.size());
+        return ResponseEntity.ok(guest);
+    }
 
 }

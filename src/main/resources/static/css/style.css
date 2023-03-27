@@ -101,5 +101,88 @@ body, html {
     font-weight: 800;
     font-size: 2rem;
     font-family: 'Roboto Slab', serif;
+    /* background: #F64C72; */
+    /* border-radius: 25px; */
+    padding: 10px;
 
+}
+
+.banner-background {
+    /* clip-path: polygon(99% 0, 36% 100%, 0 100%, 0 0); */
+    /* clip-path: polygon(100% 0, 100% 73%, 0 99%, 0 0); */
+    clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0);
+    background: #0A3DB2;
+    min-height: 50vh;
+}
+
+.banner-back {
+    /* clip-path: polygon(100% 100%, 100% 0%, 35% 100%); */
+    clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0);
+    background: #1A1A1D;
+    min-height: 50vh;
+}
+
+.banner-pic {
+    height: 350px;
+    width: 350px;
+    overflow: hidden;
+}
+
+.definition {
+    border-radius: 10px;
+    background: transparent;
+    opacity: 1;
+    font-family: Garamond, serif;
+    /* font-family: lato; */
+    color: white;
+    border: #e2e2e2;
+    letter-spacing: 3px;
+    box-shadow: 0 2rem 3rem var(--color-dark) !important;
+    /* background-color: rgba(0, 0, 0, 0.2); */
+}
+
+.register-banner {
+    background: #0B0C10 !important;
+}
+
+.dashboard {
+    /* background: #59253A !important; */
+    /* background: #0D19A3 !important; */
+    background: #F3D250 !important;
+}
+
+.primary-dark {
+    color: #000 !important;
+}
+
+.monitor {
+    color: #C3073F;
+    font-family: 'Roboto Slab', serif;
+    background: #e2e2e2;
+    padding: 10px;
+    border-radius: 25px;
+    font-weight: 800;
+    font-size: 2rem;
+}
+
+.flying-aero {
+    height: 15vh;
+    width: 15vh;
+    position: absolute;
+    /* margin-top: 5%; */
+    margin-left: 75%;
+}
+
+@media screen and (max-width: 700px) {
+    .flying-aero {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .flying-aero {
+        position: relative;
+        height: 8vh;
+        width: 8vh;
+    }
 }

@@ -121,6 +121,20 @@
                             <div th:if="${gsts.size == 0 || gsts == null}">
                                 <h2 class="text-danger">No guests are avialiable</h2>
                             </div>
+                            <div th:if="${gsts.size() != 0}">
+                                <!-- search -->
+                                <div class="search-container input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </div>
+                                    </div>
+                                    <input onkeyup="search()" id="search-input" type="text" class="form-control" placeholder="Search your guest"/>
+                                </div>
+                                <div id="search-result" class="form-control">
+
+                                </div>
+                            </div>
                             <table class="table" th:if="${gsts.size() != 0}">
                                 <thead>
                                     <tr>
@@ -255,6 +269,11 @@
             </div>
         </div>
 
+        <script>
+            $(document).ready(()=> {
+                $("#search-result").hide();
+            });
+        </script>
 
         <!-- <script>
             $(document).ready(function() {
