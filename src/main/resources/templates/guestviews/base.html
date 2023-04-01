@@ -19,29 +19,22 @@
 
     <!-- starting of Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">PGMAN</a>
+        <a class="navbar-brand" th:href="@{'/home'}">PGMAN</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <img th:src="${'/image/guest/'+guest.profile}" class="img-fluid" style="height: 40px; width: 40px;"
+                <li class="nav-item">
+                    <img th:src="${'/image/guest/'+guest.profile}" class="img-fluid" style="height: 40px; width: 40px; border-radius: 50%;"
                         alt="">
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#"><span th:text="${guest.name}"></span></a>
+                <li class="nav-item ">
+                    <h3 class=" nav-link text-warning"><span th:text="${guest.name}"></span></h3>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/"><i class="fa-solid fa-house"></i><span
-                            class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" th:href="${signup}"><i class="fa-solid fa-user-plus"></i></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" th:href="login"><i class="fa-solid fa-right-to-bracket"></i></a>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/logout'}" hint="LogOut">Logout</i></a>
                 </li>
             </ul>
         </div>

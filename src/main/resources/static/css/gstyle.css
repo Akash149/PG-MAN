@@ -149,6 +149,12 @@ small {
         margin-left: 0% !important;
     }
 
+    .call-button {
+        display: block;
+        position: fixed;
+        bottom: -4px;
+    }
+
     .sidebar {
         width: 38%;
         background: white;
@@ -324,6 +330,22 @@ small {
     border-width: 1.5px;
     display: grid;
     border-color: var(--color-dark);
+}
+
+.smart-card {
+    background: rgba(143,151,228,0.45);
+    -webkit-backdrop-filter: blur(17px);
+    backdrop-filter: blur(17px);
+    border: 1px solid rgba(143,151,228,0.225);
+}
+
+.call-button {
+    position: fixed;
+    bottom: 0px;
+    height: 50px;
+    max-width: 500px;
+    align-content: center;
+    margin-left: calc(50% - 500px / 2);
 }
 
 .floor-name {
