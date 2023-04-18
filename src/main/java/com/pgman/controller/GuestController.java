@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -122,28 +123,46 @@ public class GuestController {
         return "guestviews/guestprofile";
     }
 
+    // upload guest profile picture
+    @PostMapping("/upload/dp")
+    public String uploadProfileImage(MultipartFile file) {
+        try {
+            String filename = SaveDocFile.savefile("GUEST", "DP", 
+            guest.getName(), guest.getId(), file); 
+            guest.setProfile(filename);
+            logger.info("Files are uploaded");
+            logger.info("{}",guest.getName() + "changed own dp.");
+            guestService.updateGuest(guest.getId(), guest);      
+            logger.info("Details are saved"); 
+            return "Done";
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return "Error";
+        }
+
+    }
+
     // update guest profile
     @PostMapping("/update-details")
     public String updateGuest(@ModelAttribute Guest guest, 
     @RequestParam("dp") MultipartFile file, RedirectAttributes rat) {
 
-        if(file.isEmpty()) {
-
-        } else {
-            try {
-                String filename = SaveDocFile.savefile("GUEST", "DP", 
-                guest.getName(), guest.getId(), file);
+        try {
+            String filename = SaveDocFile.savefile("GUEST", "DP", 
+            guest.getName(), guest.getId(), file);
+            if(!filename.isEmpty()) {
                 guest.setProfile(filename);
-                guestService.updateGuest(guest.getId(), guest);
-                logger.info("Update successfully");
-                rat.addFlashAttribute("success","Updated successfully");
-                return "redirect:/guest/dashboard";
-            } catch (Exception e) {
-               logger.error("{}", e.getMessage());
-               rat.addFlashAttribute("error","Something went wrong on Server !!");
-               return "redirect:/guest/dashboard";
+            } else {
+                guest.setProfile(guest.getProfile());
             }
+            guestService.updateGuest(guest.getId(), guest);
+            logger.info("Update successfully");
+            rat.addFlashAttribute("success","Updated successfully");
+            return "redirect:/guest/dashboard";
+        } catch (Exception e) {
+           logger.error("{}", e.getMessage());
+           rat.addFlashAttribute("error","Something went wrong on Server !!");
+           return "redirect:/guest/dashboard";
         }
-        return "redirect:/guest/dashboard";
     }
 }

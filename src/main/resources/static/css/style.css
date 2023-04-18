@@ -16,17 +16,31 @@
     background: url("../assests/cool-background.svg");
 }
 
-body, html {
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* body, html {
     height: 100%;
+    width: 100vw;
     background: #e2e2e2;
     
-    /* background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%); */
+    background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+} */
+
+body {
+    min-height: 100vh;
+    width: 100vw;
+    margin: 0 auto;
+    overflow-x: hidden;
 }
 
 .banner {
     width: 100%;
     height: 93vh;
-    background: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url("../assests/pic3.jpg");
+    background: #e2e2e2;
+    /* background: url("../assests/cool-back.png"); */
 }
 
 .poster {
@@ -144,6 +158,8 @@ body, html {
     border: #e2e2e2;
     letter-spacing: 3px;
     padding: 5px;
+    justify-content: left !important;
+    text-align: left;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     /* background-color: rgba(0, 0, 0, 0.2); */
 }

@@ -1,5 +1,6 @@
 package com.pgman.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,27 @@ public class MainController {
 
     //Get common data
     @ModelAttribute
-    public void getCommon(Model model) {
+    public void getCommon(Model model, Principal principal) {
+        
+        if (principal != null) {
+            String name = principal.getName();
+            if(name.isEmpty()) {
+                logger.info("No users are logged in");
+            } else {
+                logger.info("User {}", name + "is logged in");
+                Guest guest = guestService.getGuestByEmail(name);
+                Owner owner = ownerService.getOwnerByEmail(name);
+
+                if (guest != null) {
+                    model.addAttribute("guest",guest);
+                }
+
+                if (owner != null) {
+                    model.addAttribute("owner", owner);
+                }
+            }
+        }
+        
         pgNames.clear();
         List<PgDetails> pgDetails = pgService.getAllPg();
         logger.info("PGs are loaded count is "+pgDetails.size());
@@ -91,6 +112,7 @@ public class MainController {
     public String login(Model model) {
         model.addAttribute("title", "Login");
         return "login";
+        // return "signin";
     }
 
     @GetMapping("/user")

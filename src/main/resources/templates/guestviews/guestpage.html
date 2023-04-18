@@ -20,6 +20,7 @@
                     <!-- <img th:src="${'/image/'+guest.profile}" alt="" class="profile-photo top-profile"> -->
                     <div class="user-profile">
                         <img th:src="${'/image/guest/'+guest.getProfile}" alt="" class="profile-photo top-profile">
+                        <button type="button" class="dp-button" data-toggle="modal" data-target="#dp-modal"><i class="fa-solid fa-pen"></i></button>
                         <h2 th:text="${guest.name}" class="text-center mt-2"></h2>
                     </div>
                     <div class="container text-center">
@@ -270,7 +271,7 @@
                                 <div class="form-group">
                                     <label for="guest-name">Name</label>
                                     <input type="text" name="name" class="form-control" id="user_name"
-                                        placeholder="Enter name" th:value="${guest.name}" required>
+                                        placeholder="Enter name" th:value="${guest.name}" muted>
                                 </div>
                                 <div class="form-group">
                                     <label for="guest-email">email</label>
@@ -304,7 +305,72 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="modal fade" id="dp-modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <!-- message -->
+                        <!-- <div th:if="${session.message}" class="text-center">
+                            <div th:classappend="${'alert-'+session.message.type}" class="alert alert mt-3" role="alert">
+                                <span th:text="${session.message.content}"></span>
+                            </div>
+                        </div> -->
+                            <div class="container mb-3">
+                                <form id="dp-upload" th:action="@{'/guest/upload/dp'}" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="file" name="dp" class="form-control" id="doc">
+                                        <small class="form-text text-muted">Upload only image file</small>
+                                    </div>
+                                    <div class="container text-center" id="loader" style="display: none;">
+                                        <span class="fa fa-refresh fa-spin fa-3x"></span>
+                                        <h4>Please wait...</h4>
+                                    </div>
+                                    <div>
+                                        <button type="submit" id="submit-btn" class="btn btn-block btn-success">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <script>
+            $(document).ready(function () {
+                console.log("Page loaded...");
+                $("#dp-upload").on('submit', function(event) {
+                    event.preventDefault();
+                    let form = new FormData(this);
+                    $("#submit-btn").hide();
+                    $("#loader").show();
+                    $.ajax({
+                        url : "/guest/upload/dp",
+                        type: 'POST', 
+                        dataType: "HTML",
+                        data: form,
+                        success: function(data, textStatus, jqXHR) {
+                            console.log(data);
+                            $("#submit-btn").show();
+                            $("#loader").hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#submit-btn").show();
+                            $("#loader").hide();
+                            console.log("something went wrong");
+                        }
+                    });
+                })
+            })
+        </script>
     </section>
 </body>
 
