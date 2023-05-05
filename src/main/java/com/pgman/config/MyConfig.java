@@ -32,70 +32,70 @@ import com.pgman.service.pg.impl.RoomServiceImpl;
 @Configuration
 @Component
 public class MyConfig {
-    
+
     // guest service Implementation class bean
     @Bean
-    public GuestService getGuestService() {
+    GuestService getGuestService() {
         return new GuestServiceImpl();
     }
 
     // Owner service Implementation class bean
     @Bean
-    public OwnerService getOwnerService() {
+    OwnerService getOwnerService() {
         return new OwnerServiceImpl();
     }
 
     // PG service Implementation class bean
     @Bean
-    public PgService getPgService() {
+    PgService getPgService() {
         return new PgServiceImpl();
     }
 
     // Address service Implementation class bean
     @Bean
-    public AddressService getAddressService() {
+    AddressService getAddressService() {
         return new AddressServiceImpl();
     }
 
     // User details service impl bean
     @Bean
-    public UserDetailsService getUserDetailsService() {
+    UserDetailsService getUserDetailsService() {
         return new UserDetailsServiceImpl();
     }
-    
+
     // Payment service impl bean
     @Bean
-    public PaymentService getPaymentService() {
+    PaymentService getPaymentService() {
         return new PaymentServiceImpl();
     }
 
     // Transaction service impl bean
     @Bean
-    public TransactionService getTransactionService() {
+    TransactionService getTransactionService() {
         return new TransactionServiceImpl();
     }
 
     // Floor service impl bean
     @Bean
-    public FloorService getFloorService() {
+    FloorService getFloorService() {
         return new FloorServiceImpl();
     }
 
     // Flat service impl bean
     @Bean
-    public FlatService getFlatService() {
+    FlatService getFlatService() {
         return new FlatServiceImpl();
     }
 
     // Room Service impl bean
     @Bean
-    public RoomService getRoomService() {
+    RoomService getRoomService() {
         return new RoomServiceImpl();
     }
 
     // Policy Service impl bean
     @Bean
-    public PolicyService getPolicyService() {
+    PolicyService getPolicyService() {
         return new PolicyServiceImpl();
     }
 

@@ -25,33 +25,77 @@ const search = () => {
         fetch(url).then((response) => {
             return response.json();
         }).then((data) => {
+            console.log(data);
             let text = `<div class='list-group'>`
             data.forEach((guest) => {
-                text += `<a href='/owner/${guest.getPgDetails.getId()}/${guest.getId()}/' class='list-group-item lit-group-item-action'>.${guest.name}</a>`
+                if (guest == null) {
+                    text += 'Not found'
+                } else {
+                text += `<a href='/owner/'${guest.getPgDetails.getId()}''/'${guest.getId()}'/' class='list-group-item list-group-item-action'>.${guest.name}</a>`
+            }
             });
             text += `</div>`;
 
             $("#search-result").html(text);
             $("#search-result").show();
+        }).catch(error => {
+            console.error(error);
         });
         $("#search-result").show();
     }
 }
 
-google.charts.load('current', { 'packages': ['corechart'] });
-google.cahrts.setOnLoadCallback(drawChart);
+function getFloorData() {
+    $("select#floors").change(function() {
+        let floorId = $(this).children("option:selected").val();
+        console.log("You have selected value is " + floorId);
+    });
+}
 
-function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['Task', 'Hours per Day'],
-        ['Work', 8],
-        ['Eat', 2],
-        ['TV', 4],
-        ['Gym', 2],
-        ['Sleep', 8]
-    ]);
-    var options = { 'title': 'My Average Day', 'width': 150, 'height': 150 };
-    var chart =
-        new google.visualization.PieChart(document.getElementById('piechart'));
-    chart.draw(data, options);
+// $(document).ready(function() {
+//     $("select.selectVal").change(function() {
+//         let selecteditem = $(this).children("option:selected").val();
+//         console.log("You have selected value is " + selecteditem);
+//     });
+// });
+
+
+console.log('This is Drag and drop')
+const guest = document.querySelector('.guest');
+const flatView = document.getElementsByClassName('card');
+
+// when we start to drag
+guest.addEventListener('dragstart', (e) => {
+    console.log("DragStart has been triggered");
+    e.target.className += ' hold';
+    setTimeout(() => {
+        e.target.className = 'hide';
+    }, 0);
+});
+
+// when we start to drop
+guest.addEventListener('dragend', (e) => {
+    console.log("DragStart has been ended");
+    // e.target.className += ' guest'
+});
+
+for (flat of flatView) {
+    flat.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        console.log("Dragover has been triggered");
+    });
+
+    flat.addEventListener('dragenter', (e) => {
+        console.log("Dragenter has been triggered");
+        e.target.className += ' dashed';
+    });
+    flat.addEventListener('dragleave', (e) => {
+        console.log("Dragleave has been triggered");
+        // e.target.className = 'flat';
+    });
+    flat.addEventListener('drop', (e) => {
+        console.log("Dragdrop has been triggered");
+        e.target.append(guest);
+        // e.target.className 
+    });
 }

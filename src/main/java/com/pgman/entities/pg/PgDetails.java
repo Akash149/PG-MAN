@@ -3,6 +3,7 @@ package com.pgman.entities.pg;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pgman.entities.Address;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
@@ -44,16 +45,19 @@ public class PgDetails {
 
     // @Column(name = "ADDRESS")
     @ManyToOne
+    @JsonIgnore
     private Address address;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     // @Column(name = "OWNER")
+    @JsonIgnore
     private Owner owner;
 
     @Column(name = "PROFILE")
     private String profile;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private Policy policy;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "pgDetails")

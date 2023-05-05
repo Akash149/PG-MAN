@@ -1,6 +1,7 @@
 package com.pgman.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,4 +41,7 @@ public class Transactions implements Serializable {
     @ManyToOne
     @JsonIgnore
     private Owner owner;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date transactionDate = new Date();
 }

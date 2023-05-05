@@ -14,4 +14,5 @@ public interface PaymentsRepository extends JpaRepository<Payments, Integer> {
 
     // Get all payments of guest
     public List<Payments> findByGuest(Guest guest);
+
 }

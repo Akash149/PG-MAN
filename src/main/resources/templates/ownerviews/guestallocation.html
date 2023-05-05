@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="ownerviews/base::layout(~{::section})">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <section>
+        <div class="container-fluid text-center">
+            <h1 class="pg-name" th:text="${pg.name}"></h1>
+
+            <div class="row">
+
+                <!-- column-2 RHS -->
+                <div class="col">
+                    <div class="card">
+
+                        <div th:if="${pg.floor.size == 0 || pg.floor.size == null}">
+                            <div class="container-fluid text-center">
+                                <h3 class="text-danger">You have not added the floor</h3>
+                                <a class="btn btn-success"
+                                    th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')+'/details'}}"
+                                    target="_blank">
+                                    <span>Add floor</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div th:if="${unalloc != null}">
+                            <h1 class=" text-center text-muted">Unallocated guests list</h1>
+                            <div class="card text-center" style="border-color: red;">
+                                <div class="row">
+                                    <div class="room-view d-flex guest" draggable="true" th:each="gst : ${unalloc}">
+                                        <img class="m-2" th:src="${'/image/guest/'+gst.profile}">
+                                        <span
+                                            th:classappend="${gst.paymentStatus ? 'payment-status-true' : 'payment-status-false'}"
+                                            th:text="${gst.name}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${pg.floor.size > 0 || pg.floor.size != null}" th:each="flr : ${pg.floor}">
+                            <div class="card" th:id="|${flr.name}-${flr.id}|">
+                                <div class="container-fluid text-center">
+                                    <!-- floor name and their Id -->
+                                    <h3 class="floor-name" th:text="${'Floor ' + flr.name}"></h3>
+                                    <div th:if="${#lists.isEmpty(flr.flat)}">
+                                        <p class="text-danger">Flats and rooms are not added</p>
+                                        <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}"
+                                            target="_blank">
+                                            <i class="fa fa-plus fa-2x"></i>
+                                        </a>
+                                        <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                    </div>
+                                    <div class="row">
+                                        <!-- flat view name and their Id -->
+                                        <div th:each="flt : ${flr.flat}">
+                                            <div class="card d-flex mr-3 flat" th:id="|${flt.name}-${flt.id}|">
+                                                <h3 class="floor-name" th:text="${flt.name}"></h3>
+                                                <div th:if="${#lists.isEmpty(flt.room)}">
+                                                    <p class="text-danger">Rooms are not added</p>
+                                                    <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}"
+                                                        target="_blank">
+                                                        <i class="fa fa-plus fa-2x"></i>
+                                                    </a>
+                                                    <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                                </div>
+                                                <div class = "row">
+                                                    <!-- room view -->
+                                                    <div th:each="r : ${flt.room}">
+                                                        <div class="card d-flex mr-2" th:id="|${r.name}-${r.id}|">
+                                                            <h4 class="floor-name" th:text="${r.name}"></h4>
+                                                            <div th:if="${#lists.isEmpty(flt.guest)}">
+                                                                <p class="text-danger">Guesets are not avialiable</p>
+                                                                <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}"
+                                                                    target="_blank">
+                                                                    <i class="fa fa-plus fa-2x"></i>
+                                                                </a>
+                                                                <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                                            </div>
+                                                            <!-- guest view -->
+                                                            <div th:each="gst : ${r.guest}">
+                                                                <div class="row d-flex guest" draggable="true">
+                                                                    <img class="m-2"
+                                                                        th:src="${'/image/guest/'+gst.profile}">
+                                                                    <span
+                                                                        th:classappend="${gst.paymentStatus ? 'payment-status-true' : 'payment-status-false'}"
+                                                                        th:text="${gst.name}"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

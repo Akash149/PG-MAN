@@ -10,7 +10,7 @@
 
 <body>
     <section class="d-flex justify-content-center align-items-center">
-        <div class="container text-center ">
+        <div class="container-fluid text-center ">
 
             <div class="row">
                 <div class="col-md-6 col-12">
@@ -56,7 +56,16 @@
                             </tr>
                         </table>
 
-                        <div class="row">
+                        <div th:if="${guest.room == null}">
+                            <button class="btn btn-info btn-block" data-target="#roomAllocation-modal"
+                                data-toggle="modal">Allocate room</button>
+                        </div>
+                        <div th:if="${guest.room != null}">
+                            <button type="button" class="btn btn-info btn-block" data-target="#roomAllocation-modal"
+                                data-toggle="modal">Update room</button>
+                        </div>
+
+                        <div class="row mt-2">
                             <div class="col">
                                 <div th:if="${guest.enabled}">
                                     <a class=" btn btn-warning btn-block"
@@ -111,13 +120,12 @@
                                 <tbody>
                                     <tr th:each="pay : ${payment}">
                                         <td th:text="${pay.id}"></td>
-                                        <td
-                                            th:classappend="${pay.status.equals('failed') ? 'text-danger' : 'text-success'}">
-                                            <span th:text="${pay.status}"></span>
+                                        <td th:classappend="${!pay.status ? 'text-danger' : 'text-success'}">
+                                            <span th:text="${pay.status ? 'Success' : 'Failed'}"></span>
                                         </td>
                                         <td th:text="${pay.refNo}"></td>
                                         <td th:text="${pay.gateway}"></td>
-                                        <td th:classappend="${pay.status.equals('failed') ? 'text-danger' : 'text-success'}"
+                                        <td th:classappend="${!pay.status ? 'text-danger' : 'text-success'}"
                                             style="font-weight: 700;">
                                             <span th:text="${pay.amount}"></span>
                                         </td>
@@ -145,7 +153,7 @@
             </div>
 
 
-            <!-- modeal for cash collection  -->
+            <!-- model for cash collection  -->
             <div class="modal fade" id="cashCollect-modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -176,14 +184,14 @@
                                         </div>
                                     </tr>
                                 </table>
-                                
+
                             </div>
-                            <form id="cash-collection" th:action="@{/owner/collect-cash}" method="post"></form>
+                            <!-- <form th:action="@{/owner/collect-cash}" method="post"></form>
                                 <div class="input-group form-group ">
                                     <div class="input-group-text">
                                         <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
-                                    <!-- <label for="cash-amount">Amount</label> -->
+                                    <label for="cash-amount">Amount</label>
                                     <input type="number" name="amount" class="form-control" id="amount"
                                         placeholder="Enter amount" required>
                                     <input type="text" name="guestId" th:value="${guest.id}" hidden>
@@ -193,8 +201,24 @@
                                     <h4>Please wait...</h4>
                                 </div>
                                 <div>
+                                    <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button>
+                                    <button type="submit" class="btn btn-block btn-success">Collect</button>
+                                </div>
+                            </form> -->
+
+                            <form th:action="@{/owner/collect-cash}" method="post">
+                                <div class="input-group form-group ">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    </div>
+                                    <!-- <label for="cash-amount">Amount</label> -->
+                                    <input type="number" name="amount" class="form-control" id="amount"
+                                        placeholder="Enter amount" required>
+                                    <input type="text" name="guestId" th:value="${guest.id}">
+                                </div>
+                                <div>
                                     <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
-                                    <button type="submit" id="collect-btn" class="btn btn-block btn-success">Collect</button>
+                                    <button type="submit" class="btn btn-block btn-success">Collect</button>
                                 </div>
                             </form>
                         </div>
@@ -206,11 +230,77 @@
             </a>
         </div>
 
+        <!-- model for cash collection  -->
+        <div class="modal fade" id="roomAllocation-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="container-fluid text-center">
+                            <h2>Room details</h2>
+                        </div>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- cash collection body -->
+                    <div class="modal-body">
+                        <div class="container-fluid text-center">
+                            <form th:action="@{/owner/collect-cash}" method="post">
+
+                                <!-- Select pg's -->
+                                <h3>Select floors and details of <span class="text-info" th:text="${guest.pgDetails.name}"></span></h3>
+                                <div class="input-group form-group">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-house"></i>
+                                    </div>
+                                    <select class="form-control" id="floors" name="pgname" th:onclick="|getFloorData()|">
+                                        <div th:each="floor: ${floors}">
+                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span></option>
+                                        </div>
+                                    </select>
+                                    <select class="form-control" id="flats" name="pgname" th:onclick="|getFlatData()|" hidden>
+                                        <div th:each="floor: ${floors}">
+                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span></option>
+                                        </div>
+                                    </select>
+                                    <select class="form-control selectVal" id="room" name="pgname" th:onclick="|getData()|" hidden>
+                                        <div th:each="floor: ${floors}">
+                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span></option>
+                                        </div>
+                                    </select>
+                                </div>
+
+                                <div class="input-group form-group hide">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-house"></i>
+                                    </div>
+                                    <select class="form-control" name="pgname">
+                                        <div th:each="floor: ${floors}">
+                                            <option th:value="${floor.id}" ><span th:text="${floor.name}"></span></option>
+                                        </div>
+                                    </select>
+                                </div>
+                                <input type="text" name="guestId" th:value="${guest.id}">
+                        
+                                <div>
+                                    <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
+                                    <button type="submit" class="btn btn-block btn-success">Collect</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             // $(document).ready(function () {
             //     console.log("Page loaded..");
             //     $("#cash-collection").on('submit', function(event) {
             //         event.preventDefault();
+            //         console.log("Page is not buffering");
             //         let form = new FormData(this);
             //         $("#cash-collect").hide();
             //         $("#loader").show();

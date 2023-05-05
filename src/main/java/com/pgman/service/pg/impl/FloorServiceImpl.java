@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.dao.pg.FloorRepository;
 import com.pgman.entities.pg.Floor;
+import com.pgman.entities.pg.PgDetails;
 import com.pgman.service.pg.FloorService;
 
 public class FloorServiceImpl implements FloorService {
@@ -52,6 +53,11 @@ public class FloorServiceImpl implements FloorService {
         f = floorRepo.save(floor);
 
         return f;
+    }
+
+    @Override
+    public List<Floor> getFloorsByPg(PgDetails pgDetails) {
+        return floorRepo.findAllFloorByPgDetails(pgDetails);
     }
     
 }

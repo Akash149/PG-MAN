@@ -63,7 +63,6 @@ body {
     font-size: 0.88rem;
     background: var(--color-background);
     /* background: #04123b; */
-    user-select: none;
     overflow-x: hidden;
     color: var(--color-dark);
 }
@@ -73,6 +72,7 @@ body {
     width: 96%;
     margin: 0 auto;
     gap: 1.8rem;
+    overflow: hidden;
     grid-template-columns: 14rem aouto 23 rem;
 }
 
@@ -104,6 +104,15 @@ h5 {
 
 small {
     font-size: 0.75rem;
+}
+
+section {
+    margin-top: .5rem;
+    /* padding: 5; */
+}
+
+.dot {
+
 }
 
 .profile-photo {
@@ -154,6 +163,7 @@ small {
 
 .sidebar {
     width: 20%;
+    /* margin-top: 4rem; */
     /* background: var(--color-dark-variant); */
     background: white;
     height: 100vh;
@@ -161,6 +171,10 @@ small {
     padding-top: 45px;
     z-index: 9999;
     overflow: hidden;
+}
+
+.selectVal {
+    
 }
 
 @media screen and (max-width: 500px) {
@@ -534,13 +548,40 @@ svg {
     display: blox;
 }
 
-.room-view img {
+.guest {
+    display: flex;
+    cursor: pointer;
+}
+
+.flat {
+
+}
+
+/* .guest {
+    display: flex !important;
+    cursor: pointer;
+} */
+
+.hold {
+    border: solid red;
+}
+
+.hide {
+    display: none;
+}
+
+.dashed {
+    background: voilet;
+    border-style: dashed;
+}
+
+.guest img {
     height: 28px;
     width: 28px;
     border-radius: 50%;
 }
 
-.room-view span {
+.guest span {
     margin-top: 10px;
 }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import com.pgman.entities.Address;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
+import com.pgman.entities.pg.Room;
 
 @Service
 public interface GuestService {
@@ -40,8 +41,14 @@ public interface GuestService {
     public Guest updateAddress(String guestId, Address address);
 
     //10. Get recent guests pagination
-    public Page<Guest> getRecentGuest(String ownerId, Pageable pageable);
+    public Page<Guest> getRecentGuest(Owner owner, Pageable pageable);
 
     // 11. Get guest list by name
     public List<Guest> getSearchedGuest(String name,Owner owner);
+
+    // 12. Get the count of total guest by owner
+    public int getCountOfGuestByOwner(Owner owner)  throws Exception;
+
+    // 13. Get the list of guest by owner and their room
+    public List<Guest> getGuestsByRoom(Owner owner, Room room);
 }

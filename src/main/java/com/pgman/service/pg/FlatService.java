@@ -3,6 +3,7 @@ package com.pgman.service.pg;
 import org.springframework.stereotype.Service;
 
 import com.pgman.entities.pg.Flat;
+import com.pgman.entities.pg.Floor;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public interface FlatService {
 
     // 5. get a single flat
     public Flat getAFlat(int id);
+
+    // 6. Get all flat by floor
+    public List<Flat> getFlatByFloor(Floor floor);
 
     
 }

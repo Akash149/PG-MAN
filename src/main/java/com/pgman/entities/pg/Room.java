@@ -2,6 +2,7 @@ package com.pgman.entities.pg;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pgman.entities.Guest;
 
 import jakarta.persistence.CascadeType;
@@ -40,7 +41,7 @@ public class Room {
     List<Guest> guest;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    // @JsonIgnore
+    @JsonIgnore
     Flat flat;
 
 }

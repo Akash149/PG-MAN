@@ -14,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -66,9 +67,20 @@ public class Owner {
     @Column(name = "ENABLED")
     private boolean enabled;
 
+    // It's for current month
+    @Column(name = "collectedRent")
+    private int collectedRent;
+
+    // It's for whole month
+    @Column(name = "TOTALRENTCOLLECTED")
+    private int totalRentcollected;
+
     @Column(name = "ROLE")
     @NotNull
     private String role;
+
+    @Transient
+    public int totalGuest = 0;
 
     //One owner have may be many customers;
     // @Column(name = "USER")

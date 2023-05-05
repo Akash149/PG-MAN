@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.dao.pg.FlatRepository;
 import com.pgman.entities.pg.Flat;
+import com.pgman.entities.pg.Floor;
 import com.pgman.service.pg.FlatService;
 
 public class FlatServiceImpl implements FlatService {
@@ -64,5 +65,12 @@ public class FlatServiceImpl implements FlatService {
         }
         return f;
     }
+
+    @Override
+    public List<Flat> getFlatByFloor(Floor floor) {
+        return flatRepo.findAllFlatByFloor(floor);
+    }
+
+    
     
 }

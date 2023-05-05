@@ -1,12 +1,16 @@
 package com.pgman.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
+import com.pgman.entities.Payments;
+import com.pgman.entities.Transactions;
 import com.pgman.helper.IdCreator;
+import com.pgman.service.GuestService;
 import com.pgman.service.OwnerService;
 import com.pgman.dao.OwnerRepository;
 
@@ -28,7 +32,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void deleteOwner(String id) {
-        this.ownerRepository.deleteById(id); 
+        this.ownerRepository.deleteById(id);
     }
 
     @Override
@@ -53,13 +57,13 @@ public class OwnerServiceImpl implements OwnerService {
             return this.ownerRepository.save(owner);
         } else {
             return null;
-        }  
+        }
     }
 
     @Override
     public boolean isExistByEmail(String email) {
         Owner owner = this.ownerRepository.findByEmail(email);
-        if(owner != null) {
+        if (owner != null) {
             return true;
         }
         return false;
@@ -68,7 +72,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public boolean isExistByPhone(String phone) {
         Owner owner = this.ownerRepository.findByPhone(phone);
-        if(owner != null) {
+        if (owner != null) {
             return true;
         }
         return false;
@@ -79,6 +83,34 @@ public class OwnerServiceImpl implements OwnerService {
         Owner own = this.ownerRepository.findById(owner.getId()).get();
         List<Guest> g = own.getGuest();
         return g;
-    }  
-        
+    }
+
+    @Override
+    public int getTotalCollectedRent(Owner owner) {
+        // TODO Auto-generated method stub
+        List<Transactions> transactions = owner.getTransactions();
+        List<Payments> payments = new ArrayList<Payments>();
+        int totalAmount = 0;
+        for (Transactions tr : transactions) {
+                payments.add(tr.getPayments());
+        }
+
+        for (Payments pmt : payments) {
+            totalAmount += pmt.getAmount();
+        }
+        return totalAmount;
+    }
+
+    @Override
+    public int getTotalCollectedRentOfCurrentMonth(Owner owner) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getTotalGuest(Owner owner) {
+        // TODO Auto-generated method stub
+        return 0;
+    } 
+
 }

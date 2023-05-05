@@ -2,6 +2,8 @@ package com.pgman.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.pgman.entities.Guest;
@@ -34,5 +36,11 @@ public interface TransactionService {
 
     //8. Get Transactions by guest and owner
     public List<Transactions> getTransactionOfGuestAndOwner(Guest guest, Owner owner);
+
+    // 9. Get some payments by guest and owner (Pageable)
+    public Page<Transactions> getSomeTransactionOfGuestAndOwner(Guest guest, Owner owner, Pageable pageable);
+
+    // 10. Get some transaction by guest
+    public Page<Transactions> getSomeTransactionByOwner(Owner owner, Pageable pageable);
     
 }

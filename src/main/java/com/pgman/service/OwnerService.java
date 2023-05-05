@@ -36,4 +36,13 @@ public interface OwnerService {
     // 9. Get All Guest by owner
     public List<Guest> getAllGuest(Owner owner);
 
+    // 10. Get Total Collected rent of pg whole month.
+    public int getTotalCollectedRent(Owner owner);
+
+    // 11. Get Total collected rent of current month.
+    public int getTotalCollectedRentOfCurrentMonth(Owner owner);
+
+    // 12. get the count of toal guest
+    public int getTotalGuest(Owner owner);
+
 }

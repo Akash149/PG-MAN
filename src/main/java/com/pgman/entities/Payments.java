@@ -29,7 +29,7 @@ public class Payments {
     private int id;
 
     @Column(name = "STATUS")
-    private String status;
+    private boolean status;
 
     @Column(name = "REFNO")
     private Long refNo;
