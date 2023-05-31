@@ -61,7 +61,7 @@
                                     <a th:href="${pg.id}+'/'+${pg.name.replace(' ','-')}" class="my-3">
                                         <span th:text="${pg.name}"></span>
                                     </a>
-                                    <span class="reg-date" th:text="${#dates.format(pg.regDate,'dd-MM-yyyy')}"></span>
+                                    <span class="reg-date" th:text="${#temporals.format(pg.regDate,'dd-MM-yyyy')}"></span>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                     </div>
 
                     <!-- Recent guests details -->
-                    <div class="card rec-gst">
+                    <div class="card rec-gst mb-5">
                         <h2 class="text-center text-muted">Recent guests</h2>
                         <div class="container-fluid">
                             <!-- <div th:if="${rguest.size == 0 || rguest == null}">
@@ -107,9 +107,9 @@
                     <div class="row">
                         <!-- Graph-1 -->
                         <div class="col-lg-6 col-sm-12">
-                            <div class="card text-center">
+                            <div class="card">
 
-                                <div class="collection">
+                                <div class="collection text-center">
                                     <div class="outer">
                                         <div class="inner">
                                             <h1 id="number">
@@ -129,8 +129,25 @@
                                             stroke-linecap="round" />
                                     </svg>
                                 </div>
-                                <h3 class="mt-3 text-muted">Rent collected</h3>
+                                <!-- <h3 class="mt-3 text-muted">Rent collected</h3> -->
+                                <div class="container-fluid">
+                                    <p class="text-center mt-2">Total: <span th:text="${totalRent}"></span></p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p style="color: green;">
+                                                <span style="font-weight: 700;" th:text="${collected}"></span>
+                                            </p>
+                                            
+                                        </div>
+                                        <div class="col">
+                                            <p style="color: red">
+                                                <span style="font-weight: 700;" th:text="${remaining}"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            
                         </div>
                         <!-- Graph-2 -->
                         <div class="col-lg-6 col-sm-12">
@@ -156,6 +173,7 @@
                                     </svg>
                                 </div>
                                 <h3 class="mt-3 text-muted">Rent collected</h3>
+                                
                             </div>
                         </div>
                     </div>
@@ -176,9 +194,10 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>#ID</th>
-                                            <th>Status</th>
-                                            <th>Ref. No</th>
+                                            <!-- <th>#ID</th> -->
+                                            <!-- <th>Status</th>
+                                            <th>Ref. No</th> -->
+                                            <th>Paid by</th>
                                             <th>Gateway</th>
                                             <th>Amount</th>
                                             <th>Date</th>
@@ -186,18 +205,19 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="tr : ${trans}">
-                                            <td th:text="${tr.payments.id}"></td>
-                                            <td
+                                            <!-- <td th:text="${tr.payments.id}"></td> -->
+                                            <!-- <td
                                                 th:classappend="${!tr.payments.status ? 'text-danger' : 'text-success'}">
                                                 <span th:text="${tr.payments.status ? 'Success' : 'Failed'}"></span>
                                             </td>
-                                            <td th:text="${tr.payments.refNo}"></td>
+                                            <td th:text="${tr.payments.refNo}"></td> -->
+                                            <td th:text="${tr.guest.name}"></td>
                                             <td th:text="${tr.payments.gateway}"></td>
                                             <td th:classappend="${!tr.payments.status ? 'text-danger' : 'text-success'}"
                                                 style="font-weight: 700;">
                                                 <span th:text="${tr.payments.amount}"></span>
                                             </td>
-                                            <td th:text="${#dates.format(tr.payments.date,'dd-MM-yyyy')}"></td>
+                                            <td th:text="${#temporals.format(tr.payments.date,'dd-MM-yyyy')}"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -208,9 +228,12 @@
             </div>
 
         </div>
+        <input type="number" id="per-data" th:value="${percentage}" hidden/>
 
         <script>
-
+            var per = document.getElementById("per-data").value;
+            // var data = per.i;
+            console.log(per)
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
@@ -230,7 +253,7 @@
                 }
             }
 
-            prog(72);
+            prog(per);
 
         </script>
     </section>

@@ -87,11 +87,11 @@
                     </tr>
                     <tr>
                         <th>DOB</th>
-                        <td class="px-2" th:text="${#dates.format(owner.dob,'dd-MM-yyyy')}"></td>
+                        <td class="px-2" th:text="${#temporals.format(owner.dob,'dd-MM-yyyy')}"></td>
                     </tr>
                     <tr>
                         <th>Reg.</th>
-                        <td class="px-2" th:text="${#dates.format(owner.regDate,'dd-MM-yyyy')}"></td>
+                        <td class="px-2" th:text="${#temporals.format(owner.regDate,'dd-MM-yyyy')}"></td>
                     </tr>
                     <tr>
                         <th>Add.</th>
@@ -111,7 +111,7 @@
             <span><i class="fa-solid fa-grid-horizontal"></i></span>
             Dashboard</a>
         <a id="profile-link" href="#" class="item"><i class="fa-solid fa-user"></i> Profile</a>
-        <a id="settings-link" href="#" class="item"><i class="fa-solid fa-gear"></i> Settings</a>
+        <a id="settings-link" th:href="@{/owner/setting}" class="item"><i class="fa-solid fa-gear"></i> Settings</a>
         <a th:href="@{/logout}" class="item"><i class="fa-solid fa-sign-out-alt"></i> LogOut</a>
     </div>
     <!-- <div style="width: 50%; margin-top: 5rem; margin-right: 20wh; padding-left: 20;">

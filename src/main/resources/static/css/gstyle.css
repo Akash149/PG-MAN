@@ -177,6 +177,11 @@ section {
     
 }
 
+.call-button {  
+    display: none;
+    margin-bottom: 0;
+}
+
 @media screen and (max-width: 500px) {
     .sidebar {
         display: none;

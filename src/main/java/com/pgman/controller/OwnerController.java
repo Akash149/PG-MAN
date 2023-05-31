@@ -2,7 +2,14 @@ package com.pgman.controller;
 
 import java.io.ByteArrayInputStream;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.pgman.dao.OwnerRepository;
 import com.pgman.entities.Owner;
 import com.pgman.entities.Payments;
+import com.pgman.entities.PgUtilities;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Transactions;
 import com.pgman.entities.pg.Flat;
@@ -39,6 +47,7 @@ import com.pgman.entities.pg.Policy;
 import com.pgman.entities.pg.Room;
 import com.pgman.service.ExcelService;
 import com.pgman.service.GuestService;
+import com.pgman.service.OwnerService;
 import com.pgman.service.PaymentService;
 import com.pgman.service.TransactionService;
 import com.pgman.service.pg.FlatService;
@@ -52,13 +61,13 @@ import com.pgman.service.PgService;
 public class OwnerController {
 
     @Autowired
-    private OwnerRepository ownerRepository;
-
-    @Autowired
     private PaymentService paymentService;
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private OwnerService ownerService;
 
     @Autowired
     private PgService pgService;
@@ -81,6 +90,9 @@ public class OwnerController {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private PgUtilities pgUtilities;
+
     Logger logger = LoggerFactory.getLogger(OwnerController.class);
 
     // Owner assests
@@ -92,7 +104,7 @@ public class OwnerController {
 
     @ModelAttribute
     public void commonData(Model model, Principal principal) {
-        owner = ownerRepository.findByEmail(principal.getName());
+        owner = ownerService.getOwnerByEmail(principal.getName());
         logger.info("Logged in Owner: {} ", owner.getName());
 
         pgs = pgService.getPgByOwner(owner);
@@ -120,11 +132,16 @@ public class OwnerController {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Guest> guests = guestService.getRecentGuest(owner, pageable);
         Pageable pagesize = PageRequest.of(0,14);
+        int percent = pgUtilities.getRentCollectionPercentage(owner);
         transactions = transactionService.getSomeTransactionByOwner(owner,pagesize);
         logger.info("Owner Transactions are loaded, count is {}", transactions.getSize());
         model.addAttribute("rguest", guests);
         model.addAttribute("title", owner.getName());
         model.addAttribute("trans", transactions);
+        model.addAttribute("percentage", percent);
+        model.addAttribute("totalRent", pgUtilities.getTotalRent());
+        model.addAttribute("collected",  pgUtilities.getCollectedAmount());
+        model.addAttribute("remaining",  pgUtilities.getRemainingAmount());
         return "ownerviews/ownerdash";
     }
 
@@ -410,7 +427,7 @@ public class OwnerController {
     // Cash collect by owner
     @PostMapping("/collect-cash")
     public String collectCash(@RequestParam("guestId") String guestId,
-            @RequestParam("amount") int amount, RedirectAttributes rat) {
+            @RequestParam("amount") int amount, @RequestParam("collectiontype") String collType, RedirectAttributes rat) {
         Guest guest = null;
         try {
             guest = guestService.getGuestById(guestId);
@@ -418,7 +435,7 @@ public class OwnerController {
                 // create a new payment
                 Payments payment = new Payments();
                 payment.setAmount(amount);
-                payment.setDate(new Date());
+                payment.setDate(LocalDate.now());
                 payment.setGateway("CASH");
                 payment.setRefNo(null);
                 payment.setStatus(true);
@@ -432,6 +449,21 @@ public class OwnerController {
                 transactions.setOwner(this.owner);
                 transactions.setPayments(payment);
                 transactionService.createTransaction(transactions);
+
+                if(collType.equals("rent")) {
+                    guest.setPaidAmount(amount);
+                    guest.setRemainingAmount(guest.getRemainingAmount() - amount);
+                    guest.setPaymentStatus(true);
+                    guestService.updateGuest(guestId, guest);
+                    logger.info(guest.getName() + " has been paid their rent, collected amount is " + amount);
+                }
+
+                if(collType.equals("advance")) {
+                    guest.setAdvancePaid(guest.getAdvancePaid() + amount);
+                    guestService.updateGuest(guestId, guest);
+                    logger.info(guest.getName() + " has been paid the advance, collected amount is " + amount);
+                }
+
                 logger.info("{}", "Transaction between " + guest.getName() + " and " + owner.getName()
                         + " is saved. Transaction amount is " + amount);
                 rat.addFlashAttribute("success", "Amount " + amount + " successfully collected");
@@ -517,4 +549,18 @@ public class OwnerController {
         }
     }
 
+    // Owner setting page view
+    @GetMapping("/setting")
+    public String getSetting(Model model) {
+        model.addAttribute("owner",this.owner);
+        try {
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+            //e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return "ownerviews/settingview";
+    }
+    
 }

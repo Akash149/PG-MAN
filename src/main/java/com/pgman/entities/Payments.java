@@ -1,7 +1,10 @@
 package com.pgman.entities;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "PAYMENTS")
-public class Payments {
+public class Payments implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,7 +44,8 @@ public class Payments {
     private float amount;
 
     @Column(name = "DATE")
-    private Date date;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate date;
     
     @ManyToOne
     @JsonIgnore

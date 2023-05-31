@@ -143,4 +143,9 @@ public class GuestServiceImpl implements GuestService {
         return guestRepository.findByOwnerAndRoom(owner, room);
     }
 
+    @Override
+    public int getTotalRent(Owner owner) {
+        return guestRepository.getTotalRentAmount(owner);
+    } 
+
 }

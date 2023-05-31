@@ -42,5 +42,8 @@ public interface GuestRepository extends JpaRepository<Guest, String> {
 
     // get the list of guest by owner and their room
     public List<Guest> findByOwnerAndRoom(Owner owner, Room room);
+
+    @Query("select sum(g.rentAmount) from Guest g where g.owner = :owner")
+    public int getTotalRentAmount(@Param("owner") Owner owner);
     
 }

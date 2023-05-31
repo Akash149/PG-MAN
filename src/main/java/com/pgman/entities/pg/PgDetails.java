@@ -1,7 +1,10 @@
 package com.pgman.entities.pg;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pgman.entities.Address;
@@ -25,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PgDetails {
+public class PgDetails implements Serializable{
     
     @Id
     @Column(name = "ID")
@@ -41,7 +44,8 @@ public class PgDetails {
     private int totalRoom;
 
     @Column(name = "REGDATE", updatable = false)
-    private Date regDate = new Date();
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate regDate = LocalDate.now();
 
     // @Column(name = "ADDRESS")
     @ManyToOne

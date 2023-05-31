@@ -1,7 +1,10 @@
 package com.pgman.entities.pg;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +38,9 @@ public class Policy implements Serializable{
     @Column(columnDefinition = "TEXT")
     @NotNull
     private String rule;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate addedDate = LocalDate.now();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "policy")
     private List<PgDetails> pgdetails;

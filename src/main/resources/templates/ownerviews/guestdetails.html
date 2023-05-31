@@ -44,11 +44,11 @@
                             </tr>
                             <tr>
                                 <th>Reg. Date</th>
-                                <td th:text="${#dates.format(guest.regDate,'dd-MM-yyyy')}"></td>
+                                <td th:text="${#temporals.format(guest.regDate,'dd-MM-yyyy')}"></td>
                             </tr>
                             <tr>
                                 <th>DOB</th>
-                                <td th:text="${#dates.format(guest.dob,'dd-MM-yyyy')}"></td>
+                                <td th:text="${#temporals.format(guest.dob,'dd-MM-yyyy')}"></td>
                             </tr>
                             <tr>
                                 <th>Pay status</th>
@@ -129,7 +129,7 @@
                                             style="font-weight: 700;">
                                             <span th:text="${pay.amount}"></span>
                                         </td>
-                                        <td th:text="${#dates.format(pay.date,'dd-MM-yyyy')}"></td>
+                                        <td th:text="${#temporals.format(pay.date,'dd-MM-yyyy')}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -150,8 +150,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
+                <!-- call button -->
+                <a th:href="@{'tel:'+${guest.phone}}" class="btn btn-success btn-block mb-5 call-button fixed-bottom">
+                    <i class="fa-solid fa-phone"></i>
+                </a>
+            </div>
 
             <!-- model for cash collection  -->
             <div class="modal fade" id="cashCollect-modal" tabindex="-1" aria-hidden="true">
@@ -168,7 +172,7 @@
 
                         <!-- cash collection body -->
                         <div class="modal-body">
-                            <div class="container-fluid text-center">
+                            <div class="container-fluid">
                                 <table class="table">
                                     <tr>
                                         <th>Name:</th>
@@ -185,7 +189,14 @@
                                     </tr>
                                 </table>
 
+                                <div>
+                                    <h2>To be paid : 
+                                        <span><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                                        <span style="font-weight: 800;" th:text="${guest.remainingAmount}"></span>
+                                    </h2>
+                                </div>
                             </div>
+
                             <!-- <form th:action="@{/owner/collect-cash}" method="post"></form>
                                 <div class="input-group form-group ">
                                     <div class="input-group-text">
@@ -207,6 +218,14 @@
                             </form> -->
 
                             <form th:action="@{/owner/collect-cash}" method="post">
+                                <div class="form-group">
+                                    <!-- <label for="forcollectiontype" style="text-align: start !important;">Select collection type</label> -->
+                                    <select class="form-control" name="collectiontype" id="colltype">
+                                        <option value="rent">Rent</option>
+                                        <option value="advance">Advance</option>
+                                    </select>
+                                </div>
+
                                 <div class="input-group form-group ">
                                     <div class="input-group-text">
                                         <i class="fa-solid fa-indian-rupee-sign"></i>
@@ -214,8 +233,10 @@
                                     <!-- <label for="cash-amount">Amount</label> -->
                                     <input type="number" name="amount" class="form-control" id="amount"
                                         placeholder="Enter amount" required>
-                                    <input type="text" name="guestId" th:value="${guest.id}">
+                                    
+                                    <input type="text" name="guestId" th:value="${guest.id}" hidden>
                                 </div>
+
                                 <div>
                                     <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
                                     <button type="submit" class="btn btn-block btn-success">Collect</button>
@@ -225,12 +246,9 @@
                     </div>
                 </div>
             </div>
-            <a th:href="@{'tel:'+${guest.phone}}" class="btn btn-success btn-block mb-5 call-button">
-                <i class="fa-solid fa-phone"></i>
-            </a>
         </div>
 
-        <!-- model for cash collection  -->
+        <!-- Room allocation modal  -->
         <div class="modal fade" id="roomAllocation-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -244,49 +262,50 @@
                         </button>
                     </div>
 
-                    <!-- cash collection body -->
+                    <!-- Room allocation body -->
                     <div class="modal-body">
                         <div class="container-fluid text-center">
                             <form th:action="@{/owner/collect-cash}" method="post">
 
                                 <!-- Select pg's -->
-                                <h3>Select floors and details of <span class="text-info" th:text="${guest.pgDetails.name}"></span></h3>
+                                <h3>Select floors and details of <span class="text-info"
+                                        th:text="${guest.pgDetails.name}"></span></h3>
                                 <div class="input-group form-group">
                                     <div class="input-group-text">
                                         <i class="fa-solid fa-house"></i>
                                     </div>
-                                    <select class="form-control" id="floors" name="pgname" th:onclick="|getFloorData()|">
+                                    <select class="form-control" id="floors" name="pgname"
+                                        th:onclick="|getFloorData()|">
                                         <div th:each="floor: ${floors}">
-                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span></option>
+                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span>
+                                            </option>
                                         </div>
-                                    </select>
-                                    <select class="form-control" id="flats" name="pgname" th:onclick="|getFlatData()|" hidden>
-                                        <div th:each="floor: ${floors}">
-                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span></option>
-                                        </div>
-                                    </select>
-                                    <select class="form-control selectVal" id="room" name="pgname" th:onclick="|getData()|" hidden>
-                                        <div th:each="floor: ${floors}">
-                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span></option>
+                                    </select>  
+                                </div>
+
+                                <div class="form-group">
+                                    <!-- flats of selected floors -->
+                                    <select class="form-control" id="flats" name="pgname" th:onclick="|getFlatData()|">
+                                        <div th:each="flat: ${floors[0].flat}">
+                                            <option th:value="${flat.id}"><span th:text="${flat.name}"></span></option>
                                         </div>
                                     </select>
                                 </div>
 
-                                <div class="input-group form-group hide">
-                                    <div class="input-group-text">
-                                        <i class="fa-solid fa-house"></i>
-                                    </div>
-                                    <select class="form-control" name="pgname">
-                                        <div th:each="floor: ${floors}">
-                                            <option th:value="${floor.id}" ><span th:text="${floor.name}"></span></option>
+                                <div class="form-group">
+                                    <!-- room of selected flat -->
+                                    <select class="form-control" id="flats" name="pgname" th:onclick="|getFlatData()|">
+                                        <div th:each="room: ${floors[0].flat[0].room}">
+                                            <option th:value="${room.id}"><span th:text="${room.name}"></span></option>
                                         </div>
                                     </select>
                                 </div>
-                                <input type="text" name="guestId" th:value="${guest.id}">
-                        
+
+                                <input type="text" name="guestId" th:value="${guest.id}" hidden>
+
                                 <div>
                                     <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
-                                    <button type="submit" class="btn btn-block btn-success">Collect</button>
+                                    <button type="submit" class="btn btn-block btn-success">Save</button>
                                 </div>
                             </form>
                         </div>

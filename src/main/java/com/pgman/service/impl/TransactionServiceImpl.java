@@ -1,5 +1,8 @@
 package com.pgman.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -137,6 +140,13 @@ public class TransactionServiceImpl implements TransactionService {
     public Page<Transactions> getSomeTransactionByOwner(Owner owner, Pageable pageable) {
         // return null;
         return transactionRepo.findByOwnerOrderByIdDesc(owner, pageable);
-    }   
+    }
+
+    @Override
+    public List<Transactions> getTransactionsBetween(LocalDate startDate, LocalDate endDate, Owner owner) {
+        // return transactionRepo.findByOwnerAndTransactionDateBetween(owner, startDate, endDate);
+        return transactionRepo.getTransactionsOfCurrentMonth(startDate, endDate, owner);
+        // return transactionRepo.findByOwner(ownerId);
+    }     
     
 }

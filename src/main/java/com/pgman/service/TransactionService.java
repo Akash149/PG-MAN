@@ -1,5 +1,8 @@
 package com.pgman.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -42,5 +45,9 @@ public interface TransactionService {
 
     // 10. Get some transaction by guest
     public Page<Transactions> getSomeTransactionByOwner(Owner owner, Pageable pageable);
+
+    // 11. Get list of transaction between date and purpose(current month)
+    // public List<Transactions> getTransactionsBetween(Owner owner, Date startDate, Date endDate);
+    public List<Transactions> getTransactionsBetween(LocalDate startDate, LocalDate endDate, Owner owner);
     
 }

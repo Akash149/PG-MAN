@@ -1,8 +1,8 @@
 package com.pgman.controller;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -131,7 +131,7 @@ public class MainController {
         logger.info("User is " + user.toString());
         if (user.getRole() != null) {
 
-            Date date = DateConvreter.convert(db);
+            LocalDate date = DateConvreter.convert(db);
             // user.setDob(date);
             
             if ("GUEST".equals(user.getRole())) {

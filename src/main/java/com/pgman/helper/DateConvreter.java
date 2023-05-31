@@ -1,16 +1,15 @@
 package com.pgman.helper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class DateConvreter {
 
-    public static Date convert(String date) {
-        Date date1 = null;
+    public static LocalDate convert(String date) {
+        LocalDate date1 = null;
         try {
-            date1 = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        } catch (ParseException e) {
+            // DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");;
+            date1 = LocalDate.parse(date);
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

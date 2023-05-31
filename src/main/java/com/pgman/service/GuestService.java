@@ -51,4 +51,7 @@ public interface GuestService {
 
     // 13. Get the list of guest by owner and their room
     public List<Guest> getGuestsByRoom(Owner owner, Room room);
+
+    // 14. Get the Total rent amout of pg by guest and owner
+    public int getTotalRent(Owner owner);
 }

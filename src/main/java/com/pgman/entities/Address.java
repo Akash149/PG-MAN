@@ -1,5 +1,6 @@
 package com.pgman.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Address {
+public class Address implements Serializable {
 
     @Id
     @Column(name = "ID")

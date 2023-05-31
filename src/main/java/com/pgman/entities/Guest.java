@@ -1,9 +1,11 @@
 package com.pgman.entities;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,7 +34,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Guest {
+public class Guest implements Serializable{
     
     @Id
     @Column(name = "ID")
@@ -62,7 +64,7 @@ public class Guest {
     private String occupation;
 
     @Column(name = "DOB")
-    private Date dob;
+    private LocalDate dob;
 
     @Column(name = "ENABLED")
     private boolean enabled;
@@ -75,12 +77,13 @@ public class Guest {
 
     @Column(name = "REGDATE", updatable = false)
     @NotNull
-    private Date regDate = new Date();
+    private LocalDate regDate = LocalDate.now();
 
     @Column(name = "SHIFTDATE", updatable = true)
     // @ColumnDefault(value = "CURRENT_TIMESTAMP";
     @CreationTimestamp
-    private Date shiftDate = new Date();
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate shiftDate = LocalDate.now();
 
     @Column(name = "RENTAMOUNT", updatable = true, nullable = false, columnDefinition = "int default 00")
     private int rentAmount;
@@ -90,6 +93,9 @@ public class Guest {
 
     @Column(name = "REMAININGAMOUNT", updatable = true, nullable = false, columnDefinition = "int default 00")
     private int remainingAmount;
+
+    @Column(columnDefinition = "int default 00")
+    private int advancePaid;
 
     // @Column(name = "OWNER")
     @JoinColumn(name = "OWNER")

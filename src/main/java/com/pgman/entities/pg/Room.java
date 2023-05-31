@@ -1,6 +1,10 @@
 package com.pgman.entities.pg;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pgman.entities.Guest;
@@ -22,26 +26,29 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Room {
+public class Room implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
 
     @Column(unique = true)
-    String name;
+    private String name;
 
     int bedCount;
 
-    String washRoomType;
+    private String washRoomType;
 
-    boolean status;
+    private boolean status;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate addedDate = LocalDate.now();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", fetch = FetchType.EAGER, orphanRemoval=true)
-    List<Guest> guest;
+    private List<Guest> guest;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
-    Flat flat;
+    private Flat flat;
 
 }

@@ -1,7 +1,10 @@
 package com.pgman.entities.pg;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pgman.entities.Guest;
@@ -24,28 +27,29 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Flat {
+public class Flat implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int id;
+    private int id;
 
-    boolean hallSpace;
+    private boolean hallSpace;
 
     @Column(unique = true)
     String name;
 
-    boolean status;
+    private boolean status;
 
-    Date addedDate = new Date();
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate addedDate = LocalDate.now();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "flat", fetch = FetchType.EAGER, orphanRemoval=true)
-    List<Guest> guest;
+    private List<Guest> guest;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
-    Floor floor;
+    private Floor floor;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "flat")
-    List<Room> room;
+    private List<Room> room;
 }

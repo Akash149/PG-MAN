@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import com.pgman.config.impl.UserDetailsServiceImpl;
+import com.pgman.entities.PgUtilities;
 import com.pgman.service.AddressService;
 import com.pgman.service.GuestService;
 import com.pgman.service.OwnerService;
@@ -97,6 +98,12 @@ public class MyConfig {
     @Bean
     PolicyService getPolicyService() {
         return new PolicyServiceImpl();
+    }
+
+    // pg utility class 
+    @Bean
+    PgUtilities getPgUtilities() {
+        return new PgUtilities();
     }
 
 }
