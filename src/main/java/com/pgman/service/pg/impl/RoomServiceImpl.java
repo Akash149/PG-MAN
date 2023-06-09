@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pgman.dao.pg.RoomRepository;
+import com.pgman.entities.pg.Flat;
 import com.pgman.entities.pg.Room;
 import com.pgman.service.pg.RoomService;
 
@@ -19,34 +20,18 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Room addRoom(Room room) {
-        Room r = null;
-        try {
-            r = roomRepo.save(room);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
+        Room r = roomRepo.save(room);
         return r;
     }
 
     @Override
-    public void deleteRoom(int id) {
-
-       try {
-            roomRepo.deleteById(id);
-       } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-       }
-        
+    public void deleteRoom(int id) {    
+        roomRepo.deleteById(id);  
     }
 
     @Override
     public Room getARoom(int id) {
-        Room r = null;
-        try {
-            r = roomRepo.getReferenceById(id);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
+        Room r = roomRepo.getReferenceById(id);;
         return r;
     }
 
@@ -57,13 +42,13 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Room updateRoom(int id, Room room) {
-        Room r = null;
-        try {
-            r = roomRepo.save(room);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
+        Room r = roomRepo.save(room);;
         return r;
     }
+
+    @Override
+    public List<Room> getRoomByFlat(Flat flat) {
+        return roomRepo.findByFlat(flat);
+    }   
     
 }

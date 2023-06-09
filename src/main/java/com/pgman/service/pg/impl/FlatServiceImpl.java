@@ -41,13 +41,7 @@ public class FlatServiceImpl implements FlatService {
 
     @Override
     public Flat getAFlat(int id) {
-        Flat f = null;
-        try {
-            f = flatRepo.getReferenceById(id);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
-        return null;
+        return flatRepo.getReferenceById(id);
     }
 
     @Override

@@ -115,6 +115,10 @@ section {
 
 }
 
+.custom-primary {
+    background: var(--color-primary);
+}
+
 .profile-photo {
     width: 5rem;
     height: 5rem;
@@ -165,6 +169,7 @@ section {
     width: 20%;
     /* margin-top: 4rem; */
     /* background: var(--color-dark-variant); */
+    /* display: none; */
     background: white;
     height: 100vh;
     position: fixed;
@@ -181,6 +186,10 @@ section {
     display: none;
     margin-bottom: 0;
 }
+
+/* .content {
+    margin-left: 0% !important;
+} */
 
 @media screen and (max-width: 500px) {
     .sidebar {

@@ -221,7 +221,7 @@
                                 <div class="form-group">
                                     <!-- <label for="forcollectiontype" style="text-align: start !important;">Select collection type</label> -->
                                     <select class="form-control" name="collectiontype" id="colltype">
-                                        <option value="rent">Rent</option>
+                                        <option th:if="${guest.remainingAmount != 0}" value="rent">Rent</option>
                                         <option value="advance">Advance</option>
                                     </select>
                                 </div>
@@ -274,8 +274,7 @@
                                     <div class="input-group-text">
                                         <i class="fa-solid fa-house"></i>
                                     </div>
-                                    <select class="form-control" id="floors" name="pgname"
-                                        th:onclick="|getFloorData()|">
+                                    <select class="form-control" id="floor" name="pgname">
                                         <div th:each="floor: ${floors}">
                                             <option th:value="${floor.id}"><span th:text="${floor.name}"></span>
                                             </option>
@@ -285,7 +284,7 @@
 
                                 <div class="form-group">
                                     <!-- flats of selected floors -->
-                                    <select class="form-control" id="flats" name="pgname" th:onclick="|getFlatData()|">
+                                    <select class="form-control" id="flat" name="pgname">
                                         <div th:each="flat: ${floors[0].flat}">
                                             <option th:value="${flat.id}"><span th:text="${flat.name}"></span></option>
                                         </div>
@@ -294,7 +293,7 @@
 
                                 <div class="form-group">
                                     <!-- room of selected flat -->
-                                    <select class="form-control" id="flats" name="pgname" th:onclick="|getFlatData()|">
+                                    <select class="form-control" id="room" name="pgname">
                                         <div th:each="room: ${floors[0].flat[0].room}">
                                             <option th:value="${room.id}"><span th:text="${room.name}"></span></option>
                                         </div>
@@ -315,6 +314,20 @@
         </div>
 
         <script>
+            floor.addEventListener('change',function handleChange(e){
+                fId = e.target.value;
+                console.log(fId);
+                getFlats(fId)
+                
+            flatdd.addEventListener('change',function handleChange(e){
+                flatId = e.target.value;
+                console.log(flatId);
+                getRooms(flatId);
+            });
+
+            // function getFloor() {
+
+            // }
             // $(document).ready(function () {
             //     console.log("Page loaded..");
             //     $("#cash-collection").on('submit', function(event) {
@@ -339,7 +352,7 @@
             //             }
             //         });
             //     })
-            // })
+            })
 
             function collectCash(amount) {
                 swal({

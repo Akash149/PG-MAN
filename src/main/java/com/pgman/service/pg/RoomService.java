@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.pgman.entities.pg.Flat;
 import com.pgman.entities.pg.Room;
 
 @Service
@@ -23,5 +24,8 @@ public interface RoomService {
 
     // 5. Delete a room
     public void deleteRoom(int id);
+
+    // 6. Get all room by flat(flat)
+    public List<Room> getRoomByFlat(Flat flat);
     
 }

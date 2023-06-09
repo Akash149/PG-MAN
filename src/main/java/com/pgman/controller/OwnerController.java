@@ -11,7 +11,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pgman.dao.OwnerRepository;
+import com.pgman.dto.FlatDTO;
+import com.pgman.dto.RoomDTO;
 import com.pgman.entities.Owner;
 import com.pgman.entities.Payments;
 import com.pgman.entities.PgUtilities;
@@ -519,11 +525,14 @@ public class OwnerController {
     /**
      * @return
      */
-    @PostMapping("/{gId}/allocate/room")
-    public String allocateRoom(@PathVariable("gId") String gId, @RequestParam("room") Room room,
-    @RequestParam("floor") Floor floor, @RequestParam("flat") Flat flat) {
+    @PostMapping("/{guestId}/allocate/room")
+    public String allocateRoom(@PathVariable("gId") String gId, @RequestParam("room") int roomId,
+    @RequestParam("floor") int floorId, @RequestParam("flat") int flatId) {
         Guest guest = guestService.getGuestById(gId); 
         try {
+            Floor floor = floorService.getAFloor(floorId);
+            Flat flat = flatService.getAFlat(flatId);
+            Room room = roomService.getARoom(roomId);
             guest.setFloor(floor);
             guest.setFlat(flat);
             guest.setRoom(room);
@@ -535,20 +544,62 @@ public class OwnerController {
         }
     }
 
-    @PostMapping("/floor/{flId}")
-    public ResponseEntity<List<Flat>> getFlat(@PathVariable("flId") int floorid) {
+    @GetMapping("/floor/{flId}")
+    public ResponseEntity<List<FlatDTO>> getFlat(@PathVariable("flId") int floorid) {
         Floor floor = null;
+        // FlatDTO flatdto = new FlatDTO();
         List<Flat> flats = null;
+        List<FlatDTO> flatDto = new ArrayList<FlatDTO>();
         try {
             floor = floorService.getAFloor(floorid);
-            flats = flatService.getFlatByFloor(floor);
-            return ResponseEntity.ok().body(flats);
+            // flats = flatService.getFlatByFloor(floor);
+            // return ResponseEntity.ok().body(flats);
+            if(floor.getPgDetails().getOwner().getId().equals(this.owner.getId())) {
+                flats = flatService.getFlatByFloor(floor);
+                for (Flat flt : flats) {
+                    FlatDTO flatdto = new FlatDTO(flt.getId(),flt.getName());
+                    flatDto.add(flatdto);
+                }
+                logger.info("Total count of Flat is {}",flats.size());
+                return ResponseEntity.ok().body(flatDto);
+            } else {
+                logger.warn("UnAuthorized Access, Permission denied");
+                return ResponseEntity.badRequest().build();
+            }
         } catch (Exception e) {
             logger.error("{}",e.getMessage());
             return null;
         }
     }
 
+
+    // Get room by flat 
+    @GetMapping("/flat/{flatId}")
+    public ResponseEntity<List<RoomDTO>> getRoom(@PathVariable("flatId") String flatId) {
+        List<Room> roomlist = new ArrayList<Room>();
+        List<RoomDTO> roomDto = new ArrayList<RoomDTO>();
+        Flat flat = null;
+        try {
+            flat = flatService.getAFlat(Integer.parseInt(flatId));
+            if(flat != null) {
+                 roomlist = flat.getRoom();
+                for (Room room : roomlist) {
+                    RoomDTO rDto = new RoomDTO(room.getId(), room.getName());
+                    roomDto.add(rDto);
+                }
+                logger.info("Total count of Room is {}",roomlist.size());
+            } else {
+                logger.info("Flat is Null or not found flat");
+            }
+             
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            return null;
+        }
+        return ResponseEntity.ok().body(roomDto);
+    }
+
+    
     // Owner setting page view
     @GetMapping("/setting")
     public String getSetting(Model model) {
@@ -562,5 +613,21 @@ public class OwnerController {
         }
         return "ownerviews/settingview";
     }
+
+    // get all floors of a particular PG
+    // @GetMapping("/{floorId}")
+    // public ResponseEntity<Flat> getAllFlats(@PathVariable("floorId") int floorId) {
+    //     try {
+    //         Flat flats = flatService.getAFlat(floorId);
+    //         if(flats != null) {
+    //             return ResponseEntity.ok(flats);
+    //         } else {
+    //             return ResponseEntity.http
+    //         }
+    //     } catch (Exception e) {
+    //         // TODO: handle exception
+    //     }
+
+    // }
     
 }
