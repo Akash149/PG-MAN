@@ -190,7 +190,7 @@
                                 </table>
 
                                 <div>
-                                    <h2>To be paid : 
+                                    <h2>To be paid :
                                         <span><i class="fa-solid fa-indian-rupee-sign"></i></span>
                                         <span style="font-weight: 800;" th:text="${guest.remainingAmount}"></span>
                                     </h2>
@@ -233,7 +233,7 @@
                                     <!-- <label for="cash-amount">Amount</label> -->
                                     <input type="number" name="amount" class="form-control" id="amount"
                                         placeholder="Enter amount" required>
-                                    
+
                                     <input type="text" name="guestId" th:value="${guest.id}" hidden>
                                 </div>
 
@@ -265,48 +265,46 @@
                     <!-- Room allocation body -->
                     <div class="modal-body">
                         <div class="container-fluid text-center">
-                            <form th:action="@{/owner/collect-cash}" method="post">
 
-                                <!-- Select pg's -->
-                                <h3>Select floors and details of <span class="text-info"
-                                        th:text="${guest.pgDetails.name}"></span></h3>
-                                <div class="input-group form-group">
-                                    <div class="input-group-text">
-                                        <i class="fa-solid fa-house"></i>
+                            <!-- Select pg's -->
+                            <h3>Select floors and details of <span class="text-info"
+                                    th:text="${guest.pgDetails.name}"></span></h3>
+                            <div class="input-group form-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-house"></i>
+                                </div>
+                                <select class="form-control" id="floor" name="pgname">
+                                    <div th:each="floor: ${floors}">
+                                        <option th:value="${floor.id}"><span th:text="${floor.name}"></span>
+                                        </option>
                                     </div>
-                                    <select class="form-control" id="floor" name="pgname">
-                                        <div th:each="floor: ${floors}">
-                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span>
-                                            </option>
-                                        </div>
-                                    </select>  
-                                </div>
+                                </select>
+                            </div>
 
-                                <div class="form-group">
-                                    <!-- flats of selected floors -->
-                                    <select class="form-control" id="flat" name="pgname">
-                                        <div th:each="flat: ${floors[0].flat}">
-                                            <option th:value="${flat.id}"><span th:text="${flat.name}"></span></option>
-                                        </div>
-                                    </select>
-                                </div>
+                            <div class="form-group">
+                                <!-- flats of selected floors -->
+                                <select class="form-control" id="flat" name="pgname">
+                                    <div th:each="flat: ${floors[0].flat}">
+                                        <option th:value="${flat.id}"><span th:text="${flat.name}"></span></option>
+                                    </div>
+                                </select>
+                            </div>
 
-                                <div class="form-group">
-                                    <!-- room of selected flat -->
-                                    <select class="form-control" id="room" name="pgname">
-                                        <div th:each="room: ${floors[0].flat[0].room}">
-                                            <option th:value="${room.id}"><span th:text="${room.name}"></span></option>
-                                        </div>
-                                    </select>
-                                </div>
+                            <div class="form-group">
+                                <!-- room of selected flat -->
+                                <select class="form-control" id="room" name="pgname">
+                                    <div th:each="room: ${floors[0].flat[0].room}">
+                                        <option th:value="${room.id}"><span th:text="${room.name}"></span></option>
+                                    </div>
+                                </select>
+                            </div>
 
-                                <input type="text" name="guestId" th:value="${guest.id}" hidden>
+                            <input type="text" name="guestId" th:value="${guest.id}" hidden>
 
-                                <div>
-                                    <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
-                                    <button type="submit" class="btn btn-block btn-success">Save</button>
-                                </div>
-                            </form>
+                            <div>
+                                <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
+                                <button type="button" id="allocate_btn" class="btn btn-block btn-success">Save</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -314,44 +312,16 @@
         </div>
 
         <script>
-            floor.addEventListener('change',function handleChange(e){
+            floor.addEventListener('change', function handleChange(e) {
                 fId = e.target.value;
                 console.log(fId);
                 getFlats(fId)
-                
-            flatdd.addEventListener('change',function handleChange(e){
-                flatId = e.target.value;
-                console.log(flatId);
-                getRooms(flatId);
-            });
 
-            // function getFloor() {
-
-            // }
-            // $(document).ready(function () {
-            //     console.log("Page loaded..");
-            //     $("#cash-collection").on('submit', function(event) {
-            //         event.preventDefault();
-            //         console.log("Page is not buffering");
-            //         let form = new FormData(this);
-            //         $("#cash-collect").hide();
-            //         $("#loader").show();
-            //         $.ajax({
-            //             url : "/owner/collect-cash",
-            //             type: 'POST', 
-            //             data: form,
-            //             success: function(data, textStatus, jqXHR) {
-            //                 console.log(data);
-            //                 $("#collect-btn").show();
-            //                 $("#loader").hide();
-            //             },
-            //             error: function (jqXHR, textStatus, errorThrown) {
-            //                 $("#collect-btn").show();
-            //                 $("#loader").hide();
-            //                 console.log("something went wrong");
-            //             }
-            //         });
-            //     })
+                flatdd.addEventListener('change', function handleChange(e) {
+                    flatId = e.target.value;
+                    console.log(flatId);
+                    getRooms(flatId);
+                });
             })
 
             function collectCash(amount) {

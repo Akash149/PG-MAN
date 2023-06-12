@@ -60,6 +60,9 @@ import com.pgman.service.pg.FlatService;
 import com.pgman.service.pg.FloorService;
 import com.pgman.service.pg.PolicyService;
 import com.pgman.service.pg.RoomService;
+
+import lombok.experimental.PackagePrivate;
+
 import com.pgman.service.PgService;
 
 @Controller
@@ -108,6 +111,10 @@ public class OwnerController {
     private Page<Transactions> transactions;
     private List<Guest> guests;
 
+    /**
+     * @param model
+     * @param principal
+     */
     @ModelAttribute
     public void commonData(Model model, Principal principal) {
         owner = ownerService.getOwnerByEmail(principal.getName());
@@ -132,6 +139,10 @@ public class OwnerController {
         model.addAttribute(owner);
     }
 
+    /**
+     * @param model
+     * @return
+     */
     @GetMapping("/dashboard")
     public String ownerNewDashboard(Model model) {
         // get recent 5 guests
@@ -152,6 +163,12 @@ public class OwnerController {
     }
 
     // It shows the main view of pg and their details
+    /**
+     * @param id
+     * @param name
+     * @param model
+     * @return
+     */
     @GetMapping("/{id}/{name}")
     public String pgView(@PathVariable("id") String id, @PathVariable("name") String name, Model model) {
         List<Guest> unallocGuest = null;
@@ -179,6 +196,9 @@ public class OwnerController {
     }
 
     // Download guest details in excel format
+    /**
+     * @return
+     */
     @GetMapping("/download-guest-details")
     public ResponseEntity<Resource> download() {
         String filename = "guest_details.xlsx";
@@ -199,6 +219,13 @@ public class OwnerController {
     }
 
     // Get guest-detail of a particular pg
+    /**
+     * @param pgId
+     * @param guestId
+     * @param guestName
+     * @param model
+     * @return
+     */
     @GetMapping("/{pgId}/{guestId}/{guestName}")
     public String getGuestDetails(@PathVariable String pgId,
             @PathVariable String guestId, @PathVariable String guestName, Model model) {
@@ -244,6 +271,12 @@ public class OwnerController {
     }
 
     // Add a specific PG's policy
+    /**
+     * @param policy
+     * @param pgid
+     * @param rat
+     * @return
+     */
     @PostMapping("/add/{pgid}/policy")
     public String addPgPolicy(@ModelAttribute Policy policy,
             @PathVariable String pgid, RedirectAttributes rat) {
@@ -267,6 +300,12 @@ public class OwnerController {
     }
 
     // Add a specific PG's policy
+    /**
+     * @param policy
+     * @param pgid
+     * @param rat
+     * @return
+     */
     @PostMapping("/update/{pgid}/policy")
     public String updatePgPolicy(@ModelAttribute Policy policy,
             @PathVariable String pgid, RedirectAttributes rat) {
@@ -290,6 +329,11 @@ public class OwnerController {
     }
 
     // Add/Update/Delete PG and their details
+    /**
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/{pgId}/{pgName}/details")
     public String viewPg(@PathVariable("pgId") String id, Model model) {
         PgDetails pgd = null;
@@ -316,6 +360,13 @@ public class OwnerController {
     }
 
     // Add floor handler
+    /**
+     * @param floor
+     * @param id
+     * @param model
+     * @param rat
+     * @return
+     */
     @PostMapping("/{pgId}/add/floor")
     public String addFloor(@ModelAttribute Floor floor,
             @PathVariable("pgId") String id, Model model, RedirectAttributes rat) {
@@ -347,6 +398,11 @@ public class OwnerController {
     }
 
     // Delete floor by pg owner
+    /**
+     * @param fid
+     * @param rat
+     * @return
+     */
     @GetMapping("/delete/{fid}")
     public String deleteFloor(@PathVariable("fid") int fid, RedirectAttributes rat) {
         logger.info("Are you want to delted this floor");
@@ -382,6 +438,12 @@ public class OwnerController {
     }
 
     // Activate the guest account by owner
+    /**
+     * @param pgId
+     * @param guestId
+     * @param rat
+     * @return
+     */
     @GetMapping("/{pgId}/{guestId}/activate")
     public String activateGuest(@PathVariable("pgId") String pgId,
             @PathVariable("guestId") String guestId, RedirectAttributes rat) {
@@ -406,6 +468,12 @@ public class OwnerController {
     }
 
     // Deactivate the guest account by owner
+    /**
+     * @param pgId
+     * @param guestId
+     * @param rat
+     * @return
+     */
     @GetMapping("/{pgId}/{guestId}/deactivate")
     public String deactivateGuest(@PathVariable("pgId") String pgId,
             @PathVariable("guestId") String guestId, RedirectAttributes rat) {
@@ -431,6 +499,13 @@ public class OwnerController {
     }
 
     // Cash collect by owner
+    /**
+     * @param guestId
+     * @param amount
+     * @param collType
+     * @param rat
+     * @return
+     */
     @PostMapping("/collect-cash")
     public String collectCash(@RequestParam("guestId") String guestId,
             @RequestParam("amount") int amount, @RequestParam("collectiontype") String collType, RedirectAttributes rat) {
@@ -490,6 +565,10 @@ public class OwnerController {
 
 
     // Search guest by owner in guest list
+    /**
+     * @param query
+     * @return
+     */
     @GetMapping("/search/{query}")
     public ResponseEntity<List<Guest>> search(@PathVariable("query") String query) {
         logger.info(query);
@@ -499,6 +578,11 @@ public class OwnerController {
     }
 
     // Guest Allocation page view
+    /**
+     * @param pgId
+     * @param model
+     * @return
+     */
     @GetMapping("/{pgId}/allocate/guest")
     public String guestAllocation(@PathVariable("pgId") String pgId, Model model) {
         List<Guest> unallocGuest = null;
@@ -544,6 +628,43 @@ public class OwnerController {
         }
     }
 
+    //Bed allotment of a gurest by owner
+    // @PostMapping("/allocate/room/{guestId}/{floorId}/{flatId}/{roomId}")
+    @GetMapping("/allocate/room/{guestId}/{floorId}/{flatId}/{roomId}")
+    public String allocateRoomOfGuest(@PathVariable("guestId") String guestId, @PathVariable("floorId")
+    int floorId, @PathVariable("flatId") int flatId, @PathVariable("roomId") int roomId ) {
+
+        try {
+            Guest guest = guestService.getGuestById(guestId);
+            Floor floor = floorService.getAFloor(floorId);
+            Flat flat = null;
+            Room room = null;
+            // var flat = floor.getFlat().stream().filter(flt -> flt.getId() == flatId);
+            for (Flat flt : floor.getFlat()) {
+               if(flt.getId() == flatId)
+                    flat = flt;
+                
+                for (Room rm : flt.getRoom()) {
+                    if(rm.getId() == roomId)
+                        room = rm;
+                }
+            }
+            guest.setFloor(floor);
+            guest.setFlat(flat);
+            guest.setRoom(room);
+            guestService.updateGuest(guestId, guest);
+            return "done";
+        } catch (Exception e) {
+            // TODO: handle exception
+            return "error";
+        }
+
+    }
+
+    /**
+     * @param floorid
+     * @return
+     */
     @GetMapping("/floor/{flId}")
     public ResponseEntity<List<FlatDTO>> getFlat(@PathVariable("flId") int floorid) {
         Floor floor = null;
@@ -574,6 +695,10 @@ public class OwnerController {
 
 
     // Get room by flat 
+    /**
+     * @param flatId
+     * @return
+     */
     @GetMapping("/flat/{flatId}")
     public ResponseEntity<List<RoomDTO>> getRoom(@PathVariable("flatId") String flatId) {
         List<Room> roomlist = new ArrayList<Room>();
@@ -601,6 +726,10 @@ public class OwnerController {
 
     
     // Owner setting page view
+    /**
+     * @param model
+     * @return
+     */
     @GetMapping("/setting")
     public String getSetting(Model model) {
         model.addAttribute("owner",this.owner);
@@ -614,20 +743,6 @@ public class OwnerController {
         return "ownerviews/settingview";
     }
 
-    // get all floors of a particular PG
-    // @GetMapping("/{floorId}")
-    // public ResponseEntity<Flat> getAllFlats(@PathVariable("floorId") int floorId) {
-    //     try {
-    //         Flat flats = flatService.getAFlat(floorId);
-    //         if(flats != null) {
-    //             return ResponseEntity.ok(flats);
-    //         } else {
-    //             return ResponseEntity.http
-    //         }
-    //     } catch (Exception e) {
-    //         // TODO: handle exception
-    //     }
 
-    // }
     
 }
