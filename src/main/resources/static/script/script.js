@@ -92,7 +92,8 @@ function getFlats(floorId) {
 }
 
 function getRooms(flatId) {
-    let url = `http://localhost:8282/owner/flat/${flatId}`;
+    // http://192.168.1.238:882
+    let url = `http://192.168.1.238:8282/owner/flat/${flatId}`;
     fetch(url).then((response) => {
         return response.json();
     }).then((data) => {
@@ -120,17 +121,45 @@ function getRooms(flatId) {
     });
 }
 
-document.getElementById('allocate_btn').onclick = function () {
-    var floorId = $("#floor").val();
-    var flatId = $("#flat").val();
-    var roomId = $("#room").val();
-    console.log("Floor Id : " + floorId + ", flat Id : " + flatId + ", room Id : " + roomId);
-    if (floorId !=null && flatId != null && roomId !=null ) {
-        $.ajax({
-            url = '',
-        });
-    }
-}
+$('#allocationDetails').on('submit', function(event){
+    event.preventDefault();
+    let form = new FormData(this);
+    $.ajax({
+        // url : 'http://localhost:8282/owner/allocate/room/guest',
+        url : 'localhost:8282/owner/allocate/room/guest',
+        type : 'POST',
+        data : form,
+
+        success: function(data, textStatus, jqXHR) {
+            console.log(data)
+            
+            if(data.trim()  == 'done') {
+                swal("Saved successfully")
+                .then((value) => {
+                    window.location = ""
+                });
+            } else {
+                swal(data);
+            }
+        },
+
+        error: function(jqXHR, textStatus, errorThrown) {
+            swal("Something went wrong !");
+        },
+        processData: false,
+        contentType: false
+    });
+});
+
+// document.getElementById('allocate_btn').onclick = function () {
+//     var floorId = $("#floor").val();
+//     var flatId = $("#flat").val();
+//     var roomId = $("#room").val();
+//     console.log("Floor Id : " + floorId + ", flat Id : " + flatId + ", room Id : " + roomId);
+//     if (floorId !=null && flatId != null && roomId !=null ) {
+       
+//     }
+// }
 
 console.log('This is Drag and drop')
 const guest = document.querySelector('.guest');

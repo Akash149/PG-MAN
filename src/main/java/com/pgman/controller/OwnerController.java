@@ -630,10 +630,10 @@ public class OwnerController {
 
     //Bed allotment of a gurest by owner
     // @PostMapping("/allocate/room/{guestId}/{floorId}/{flatId}/{roomId}")
-    @GetMapping("/allocate/room/{guestId}/{floorId}/{flatId}/{roomId}")
-    public String allocateRoomOfGuest(@PathVariable("guestId") String guestId, @PathVariable("floorId")
-    int floorId, @PathVariable("flatId") int flatId, @PathVariable("roomId") int roomId ) {
-
+    @PostMapping("/allocate/room/guest")
+    public String allocateRoomOfGuest(@RequestParam("guestId") String guestId, @RequestParam("floorId")
+    int floorId, @RequestParam("flatId") int flatId, @RequestParam("roomId") int roomId ) {
+        logger.info("Allocation handler start");
         try {
             Guest guest = guestService.getGuestById(guestId);
             Floor floor = floorService.getAFloor(floorId);

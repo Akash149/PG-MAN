@@ -268,49 +268,54 @@
 
                             <!-- Select pg's -->
                             <h3>Select floors and details of <span class="text-info"
-                                    th:text="${guest.pgDetails.name}"></span></h3>
-                            <div class="input-group form-group">
-                                <div class="input-group-text">
-                                    <i class="fa-solid fa-house"></i>
+                                    th:text="${guest.pgDetails.name}"></span>
+                            </h3>
+
+                            <form method="POST" th:action="@{/allocate/room/guest}" id="allocationDetails">
+                                <div class="input-group form-group">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-house"></i>
+                                    </div>
+                                    <select class="form-control" name="floorId" id="floor">
+                                        <div th:each="floor: ${floors}">
+                                            <option th:value="${floor.id}"><span th:text="${floor.name}"></span>
+                                            </option>
+                                        </div>
+                                    </select>
                                 </div>
-                                <select class="form-control" id="floor" name="pgname">
-                                    <div th:each="floor: ${floors}">
-                                        <option th:value="${floor.id}"><span th:text="${floor.name}"></span>
-                                        </option>
-                                    </div>
-                                </select>
-                            </div>
 
-                            <div class="form-group">
-                                <!-- flats of selected floors -->
-                                <select class="form-control" id="flat" name="pgname">
-                                    <div th:each="flat: ${floors[0].flat}">
-                                        <option th:value="${flat.id}"><span th:text="${flat.name}"></span></option>
-                                    </div>
-                                </select>
-                            </div>
+                                <div class="form-group">
+                                    <!-- flats of selected floors -->
+                                    <select class="form-control" id="flat" name="flatId">
+                                        <div th:each="flat: ${floors[0].flat}">
+                                            <option th:value="${flat.id}"><span th:text="${flat.name}"></span></option>
+                                        </div>
+                                    </select>
+                                </div>
 
-                            <div class="form-group">
-                                <!-- room of selected flat -->
-                                <select class="form-control" id="room" name="pgname">
-                                    <div th:each="room: ${floors[0].flat[0].room}">
-                                        <option th:value="${room.id}"><span th:text="${room.name}"></span></option>
-                                    </div>
-                                </select>
-                            </div>
+                                <div class="form-group">
+                                    <!-- room of selected flat -->
+                                    <select class="form-control" id="room" name="roomId">
+                                        <div th:each="room: ${floors[0].flat[0].room}">
+                                            <option th:value="${room.id}"><span th:text="${room.name}"></span></option>
+                                        </div>
+                                    </select>
+                                </div>
 
-                            <input type="text" name="guestId" th:value="${guest.id}" hidden>
+                                <input type="text" name="guestId" th:value="${guest.id}" hidden>
 
-                            <div>
-                                <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
-                                <button type="button" id="allocate_btn" class="btn btn-block btn-success">Save</button>
-                            </div>
+                                <div>
+                                    <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
+                                    <button type="submit" id="submt-btn"
+                                        class="btn btn-block btn-success">Save</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script>
             floor.addEventListener('change', function handleChange(e) {
                 fId = e.target.value;
