@@ -143,9 +143,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transactions> getTransactionsBetween(LocalDate startDate, LocalDate endDate, Owner owner) {
+    public List<Transactions> getTransactionsBetween(LocalDate startDate, LocalDate endDate, Owner owner, String type) {
         // return transactionRepo.findByOwnerAndTransactionDateBetween(owner, startDate, endDate);
-        return transactionRepo.getTransactionsOfCurrentMonth(startDate, endDate, owner);
+        return transactionRepo.getTransactionsOfCurrentMonth(startDate, endDate, owner, type);
         // return transactionRepo.findByOwner(ownerId);
     }     
     

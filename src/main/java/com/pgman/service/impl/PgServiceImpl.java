@@ -18,6 +18,7 @@ public class PgServiceImpl implements PgService {
 
     @Override
     public PgDetails addPg(PgDetails pgDetails) {
+        pgDetails.setProfile("default.png");
         return pgRepo.save(pgDetails);
     }
 

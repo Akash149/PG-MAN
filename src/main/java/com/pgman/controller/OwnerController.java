@@ -2,20 +2,9 @@ package com.pgman.controller;
 
 import java.io.ByteArrayInputStream;
 import java.security.Principal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,21 +19,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.pgman.dao.OwnerRepository;
 import com.pgman.dto.FlatDTO;
 import com.pgman.dto.RoomDTO;
+import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
 import com.pgman.entities.Payments;
 import com.pgman.entities.PgUtilities;
-import com.pgman.entities.Guest;
 import com.pgman.entities.Transactions;
 import com.pgman.entities.pg.Flat;
 import com.pgman.entities.pg.Floor;
@@ -55,16 +45,14 @@ import com.pgman.service.ExcelService;
 import com.pgman.service.GuestService;
 import com.pgman.service.OwnerService;
 import com.pgman.service.PaymentService;
+import com.pgman.service.PgService;
 import com.pgman.service.TransactionService;
 import com.pgman.service.pg.FlatService;
 import com.pgman.service.pg.FloorService;
 import com.pgman.service.pg.PolicyService;
 import com.pgman.service.pg.RoomService;
 
-import lombok.experimental.PackagePrivate;
-
-import com.pgman.service.PgService;
-
+@CrossOrigin(origins = { "*" }, maxAge = 4800, allowCredentials = "false")
 @Controller
 @RequestMapping("/owner")
 public class OwnerController {
@@ -106,7 +94,7 @@ public class OwnerController {
 
     // Owner assests
     private Owner owner;
-    private List<PgDetails> pgs;
+    private List<PgDetails> pgs = new ArrayList<PgDetails>();
     // private List<Transactions> transactions;
     private Page<Transactions> transactions;
     private List<Guest> guests;
@@ -133,7 +121,7 @@ public class OwnerController {
             owner.setTotalGuest(guestService.getCountOfGuestByOwner(owner));
         } catch (Exception e) {
             e.printStackTrace();
-        logger.error("{}", e.getMessage());
+            logger.error("{}", e.getMessage());
         }
         model.addAttribute("pgs", pgs);
         model.addAttribute(owner);
@@ -145,20 +133,24 @@ public class OwnerController {
      */
     @GetMapping("/dashboard")
     public String ownerNewDashboard(Model model) {
-        // get recent 5 guests
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Guest> guests = guestService.getRecentGuest(owner, pageable);
-        Pageable pagesize = PageRequest.of(0,14);
-        int percent = pgUtilities.getRentCollectionPercentage(owner);
-        transactions = transactionService.getSomeTransactionByOwner(owner,pagesize);
-        logger.info("Owner Transactions are loaded, count is {}", transactions.getSize());
-        model.addAttribute("rguest", guests);
-        model.addAttribute("title", owner.getName());
-        model.addAttribute("trans", transactions);
-        model.addAttribute("percentage", percent);
-        model.addAttribute("totalRent", pgUtilities.getTotalRent());
-        model.addAttribute("collected",  pgUtilities.getCollectedAmount());
-        model.addAttribute("remaining",  pgUtilities.getRemainingAmount());
+        try {
+            // get recent 5 guests
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<Guest> guests = guestService.getRecentGuest(owner, pageable);
+            Pageable pagesize = PageRequest.of(0, 14);
+            int percent = pgUtilities.getRentCollectionPercentage(owner);
+            transactions = transactionService.getSomeTransactionByOwner(owner, pagesize);
+            logger.info("Owner Transactions are loaded, count is {}", transactions.getSize());
+            model.addAttribute("rguest", guests);
+            model.addAttribute("title", owner.getName());
+            model.addAttribute("trans", transactions);
+            model.addAttribute("percentage", percent);
+            model.addAttribute("totalRent", pgUtilities.getTotalRent());
+            model.addAttribute("collected", pgUtilities.getCollectedAmount());
+            model.addAttribute("remaining", pgUtilities.getRemainingAmount());
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+        }
         return "ownerviews/ownerdash";
     }
 
@@ -182,7 +174,7 @@ public class OwnerController {
                     model.addAttribute("pg", pgDetails);
                     model.addAttribute("gsts", guests);
                     model.addAttribute("unalloc", unallocGuest);
-                    logger.info("UnAllocated guest count is {}",unallocGuest.size());
+                    logger.info("UnAllocated guest count is {}", unallocGuest.size());
                     return "ownerviews/pgview";
                 } else {
                     return "redirect:/access-denied";
@@ -234,7 +226,6 @@ public class OwnerController {
         Guest guest = null;
         List<Transactions> trs = null;
         List<Payments> payments = new ArrayList<Payments>();
-
 
         try {
             // ! this logic will remove in future
@@ -508,7 +499,8 @@ public class OwnerController {
      */
     @PostMapping("/collect-cash")
     public String collectCash(@RequestParam("guestId") String guestId,
-            @RequestParam("amount") int amount, @RequestParam("collectiontype") String collType, RedirectAttributes rat) {
+            @RequestParam("amount") int amount, @RequestParam("collectiontype") String collType,
+            RedirectAttributes rat) {
         Guest guest = null;
         try {
             guest = guestService.getGuestById(guestId);
@@ -531,7 +523,9 @@ public class OwnerController {
                 transactions.setPayments(payment);
                 transactionService.createTransaction(transactions);
 
-                if(collType.equals("rent")) {
+                if (collType.equals("rent")) {
+                    transactions.setType("rent");
+                    transactionService.updateTransaction(transactions.getId(), transactions);
                     guest.setPaidAmount(amount);
                     guest.setRemainingAmount(guest.getRemainingAmount() - amount);
                     guest.setPaymentStatus(true);
@@ -539,7 +533,9 @@ public class OwnerController {
                     logger.info(guest.getName() + " has been paid their rent, collected amount is " + amount);
                 }
 
-                if(collType.equals("advance")) {
+                if (collType.equals("advance")) {
+                    transactions.setType("advance");
+                    transactionService.updateTransaction(transactions.getId(), transactions);
                     guest.setAdvancePaid(guest.getAdvancePaid() + amount);
                     guestService.updateGuest(guestId, guest);
                     logger.info(guest.getName() + " has been paid the advance, collected amount is " + amount);
@@ -562,7 +558,6 @@ public class OwnerController {
             return "redirect:/owner/dashboard";
         }
     }
-
 
     // Search guest by owner in guest list
     /**
@@ -596,7 +591,7 @@ public class OwnerController {
                 model.addAttribute("pg", pgDetails);
                 model.addAttribute("unalloc", unallocGuest);
                 model.addAttribute("floors", floors);
-                logger.info("Unallocated guest count is {}",unallocGuest.size());
+                logger.info("Unallocated guest count is {}", unallocGuest.size());
                 return "ownerviews/guestallocation";
             }
         } catch (Exception e) {
@@ -604,15 +599,15 @@ public class OwnerController {
         }
         return "redirect:/access-denied";
     }
-    
+
     // Allocate room of unallocated guest by owner
     /**
      * @return
      */
     @PostMapping("/{guestId}/allocate/room")
     public String allocateRoom(@PathVariable("gId") String gId, @RequestParam("room") int roomId,
-    @RequestParam("floor") int floorId, @RequestParam("flat") int flatId) {
-        Guest guest = guestService.getGuestById(gId); 
+            @RequestParam("floor") int floorId, @RequestParam("flat") int flatId) {
+        Guest guest = guestService.getGuestById(gId);
         try {
             Floor floor = floorService.getAFloor(floorId);
             Flat flat = flatService.getAFlat(flatId);
@@ -628,11 +623,12 @@ public class OwnerController {
         }
     }
 
-    //Bed allotment of a gurest by owner
+    // Bed allotment of a gurest by owner
     // @PostMapping("/allocate/room/{guestId}/{floorId}/{flatId}/{roomId}")
-    @PostMapping("/allocate/room/guest")
-    public String allocateRoomOfGuest(@RequestParam("guestId") String guestId, @RequestParam("floorId")
-    int floorId, @RequestParam("flatId") int flatId, @RequestParam("roomId") int roomId ) {
+    @PutMapping("/allocate/room/guest")
+    public ResponseEntity<String> allocateRoomOfGuest(@RequestParam("guestId") String guestId,
+            @RequestParam("floorId") int floorId, @RequestParam("flatId") int flatId,
+            @RequestParam("roomId") int roomId) {
         logger.info("Allocation handler start");
         try {
             Guest guest = guestService.getGuestById(guestId);
@@ -641,11 +637,11 @@ public class OwnerController {
             Room room = null;
             // var flat = floor.getFlat().stream().filter(flt -> flt.getId() == flatId);
             for (Flat flt : floor.getFlat()) {
-               if(flt.getId() == flatId)
+                if (flt.getId() == flatId)
                     flat = flt;
-                
+
                 for (Room rm : flt.getRoom()) {
-                    if(rm.getId() == roomId)
+                    if (rm.getId() == roomId)
                         room = rm;
                 }
             }
@@ -653,10 +649,13 @@ public class OwnerController {
             guest.setFlat(flat);
             guest.setRoom(room);
             guestService.updateGuest(guestId, guest);
-            return "done";
+            logger.info("{}", guest.getName() + " allocated in floor: " + floor.getName() + ", flat: " + flat.getName()
+                    + ", room: " + room.getName());
+            return ResponseEntity.ok("done");
         } catch (Exception e) {
-            // TODO: handle exception
-            return "error";
+            ResponseEntity.ok("error");
+            logger.error("{}", e.getMessage());
+            return ResponseEntity.status(500).build();
         }
 
     }
@@ -675,26 +674,25 @@ public class OwnerController {
             floor = floorService.getAFloor(floorid);
             // flats = flatService.getFlatByFloor(floor);
             // return ResponseEntity.ok().body(flats);
-            if(floor.getPgDetails().getOwner().getId().equals(this.owner.getId())) {
+            if (floor.getPgDetails().getOwner().getId().equals(this.owner.getId())) {
                 flats = flatService.getFlatByFloor(floor);
                 for (Flat flt : flats) {
-                    FlatDTO flatdto = new FlatDTO(flt.getId(),flt.getName());
+                    FlatDTO flatdto = new FlatDTO(flt.getId(), flt.getName());
                     flatDto.add(flatdto);
                 }
-                logger.info("Total count of Flat is {}",flats.size());
+                logger.info("Total count of Flat is {}", flats.size());
                 return ResponseEntity.ok().body(flatDto);
             } else {
                 logger.warn("UnAuthorized Access, Permission denied");
                 return ResponseEntity.badRequest().build();
             }
         } catch (Exception e) {
-            logger.error("{}",e.getMessage());
+            logger.error("{}", e.getMessage());
             return null;
         }
     }
 
-
-    // Get room by flat 
+    // Get room by flat
     /**
      * @param flatId
      * @return
@@ -706,17 +704,17 @@ public class OwnerController {
         Flat flat = null;
         try {
             flat = flatService.getAFlat(Integer.parseInt(flatId));
-            if(flat != null) {
-                 roomlist = flat.getRoom();
+            if (flat != null) {
+                roomlist = flat.getRoom();
                 for (Room room : roomlist) {
                     RoomDTO rDto = new RoomDTO(room.getId(), room.getName());
                     roomDto.add(rDto);
                 }
-                logger.info("Total count of Room is {}",roomlist.size());
+                logger.info("Total count of Room is {}", roomlist.size());
             } else {
                 logger.info("Flat is Null or not found flat");
             }
-             
+
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
             return null;
@@ -724,7 +722,6 @@ public class OwnerController {
         return ResponseEntity.ok().body(roomDto);
     }
 
-    
     // Owner setting page view
     /**
      * @param model
@@ -732,17 +729,64 @@ public class OwnerController {
      */
     @GetMapping("/setting")
     public String getSetting(Model model) {
-        model.addAttribute("owner",this.owner);
+        model.addAttribute("owner", this.owner);
         try {
-            
+
         } catch (Exception e) {
             // TODO: handle exception
-            //e.printStackTrace();
+            // e.printStackTrace();
             logger.error(e.getMessage());
         }
         return "ownerviews/settingview";
     }
 
+    // Owner can add a PG (pageview)
+    @GetMapping("/add/pg")
+    public String addAPg(Model model) {
+        model.addAttribute("owner", this.owner);
+        return "ownerviews/addpgview";
+    }
 
-    
+    /**
+     * @param pgName
+     * @return
+     */
+    @PostMapping("/add/new/pg")
+    public ResponseEntity<String> addPg(@RequestParam("name") String pgName) {
+        PgDetails pg = new PgDetails();
+        ResponseEntity response = null;
+        try {
+            int num = (int)(Math.random()*9000)+1000;
+            //String[] fname = pgName.split(" ");
+            // String id = (String) num + fname[0].getChars(0, 2, null, num);
+            pg.setName(pgName);
+            pg.setId(String.valueOf(num));
+            pg.setOwner(this.owner);
+            pgService.addPg(pg);
+
+            response = ResponseEntity.ok().body("done");
+        } catch (Exception e) {
+            logger.error("{}",e.getMessage());
+            ResponseEntity.ok("error").getStatusCode();
+        }
+        return response;
+    }
+
+    // Add new flat in a floor
+    @PostMapping("/pg/add/flat")
+    public ResponseEntity<String> addAFlat(Flat newFlat) {
+        ResponseEntity response = null;
+        try {
+            logger.info("{}",newFlat.getFloor().getId());
+            flatService.addFlat(newFlat);
+            logger.info("New flats are added");
+            response = ResponseEntity.ok().body("done");
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            ResponseEntity.ok("error").getStatusCode();
+        }
+        return response;
+    }
+
+
 }

@@ -47,7 +47,7 @@ public class PgUtilities implements Serializable{
 
     public int getRentCollectionPercentage(Owner owners) {
         try {       
-            tr = transactionService.getTransactionsBetween(startDate,endDate,owners);
+            tr = transactionService.getTransactionsBetween(startDate,endDate,owners,"rent");
             totalRent = guestService.getTotalRent(owners);
             logger.info("Transaction between {}",startDate +" to " + endDate + ", Transaction count is " + tr.size());
             collectedAmount = 0;

@@ -264,12 +264,14 @@
 
                     <!-- Room allocation body -->
                     <div class="modal-body">
-                        <div class="container-fluid text-center">
+                        <div class="container-fluid">
 
                             <!-- Select pg's -->
-                            <h3>Select floors and details of <span class="text-info"
-                                    th:text="${guest.pgDetails.name}"></span>
-                            </h3>
+                            <div class="text-center">
+                                <h3 class="tex-center">Select floors and details of <span class="text-info"
+                                        th:text="${guest.pgDetails.name}"></span>
+                                </h3>
+                            </div>
 
                             <form method="POST" th:action="@{/allocate/room/guest}" id="allocationDetails">
                                 <div class="input-group form-group">
@@ -292,6 +294,9 @@
                                         </div>
                                     </select>
                                 </div>
+                                <div>
+                                    <h3 class="text-danger text-center" id="warn-message1">flats are not avialiable</h3>
+                                </div>
 
                                 <div class="form-group">
                                     <!-- room of selected flat -->
@@ -301,13 +306,15 @@
                                         </div>
                                     </select>
                                 </div>
+                                <div>
+                                    <h3 class="text-danger text-center" id="warn-message2">Rooms are not avialiable</h3>
+                                </div>
 
                                 <input type="text" name="guestId" th:value="${guest.id}" hidden>
 
                                 <div>
                                     <!-- <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button> -->
-                                    <button type="submit" id="submt-btn"
-                                        class="btn btn-block btn-success">Save</button>
+                                    <button type="submit" id="submt-btn" class="btn btn-block btn-success">Save</button>
                                 </div>
                             </form>
                         </div>
@@ -315,7 +322,8 @@
                 </div>
             </div>
         </div>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             floor.addEventListener('change', function handleChange(e) {
                 fId = e.target.value;
@@ -330,6 +338,7 @@
             })
 
             function collectCash(amount) {
+
                 swal({
                     title: "Are you sure?",
                     text: "You are collected " + amount,

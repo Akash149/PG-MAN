@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pgman.entities.Owner;
 import com.pgman.entities.pg.Flat;
 import com.pgman.entities.pg.Floor;
 import com.pgman.entities.pg.PgDetails;
@@ -35,6 +36,8 @@ public class PgController {
     @Autowired
     RoomService roomService;
 
+    private Owner owner = new Owner();
+    
     Logger LOGGER = LoggerFactory.getLogger(PgController.class);
 
     @GetMapping("/{pgId}")

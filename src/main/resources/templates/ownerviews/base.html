@@ -98,8 +98,8 @@
                         <td th:text="${owner.address}"></td>
                     </tr>
                 </table>
-                <div th:if="${owner.enabled}">
-                    <a href="#" class="btn btn-block btn-success"> Edit</a>
+                <div th:if="${!owner.enabled}">
+                    <a href="#" class="btn btn-block btn-warning"> Edit</a>
                 </div >
                 <div th:if="${!owner.enabled}" class="text-center">
                     <button type="button" class="btn btn-block btn-warning" data-toggle="modal"

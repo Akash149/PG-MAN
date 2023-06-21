@@ -48,6 +48,6 @@ public interface TransactionService {
 
     // 11. Get list of transaction between date and purpose(current month)
     // public List<Transactions> getTransactionsBetween(Owner owner, Date startDate, Date endDate);
-    public List<Transactions> getTransactionsBetween(LocalDate startDate, LocalDate endDate, Owner owner);
+    public List<Transactions> getTransactionsBetween(LocalDate startDate, LocalDate endDate, Owner owner, String type);
     
 }

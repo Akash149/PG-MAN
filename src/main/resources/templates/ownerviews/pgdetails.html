@@ -36,7 +36,10 @@
                             <div class="card mb-3">
                                 <h2 class="text-muted">Address</h2>
                                 <div class="container-fluid text-center">
-                                    <table class="table mt-2">
+                                    <div th:if="${pg.address == null}">
+                                        <h3 class="text-danger">Address is not avialiable</h3>
+                                    </div>
+                                    <table class="table mt-2" th:if="${pg.address != null}">
                                         <tr>
                                             <th>Street</th>
                                             <td th:text="${pg.address.street}"></td>
@@ -94,11 +97,15 @@
                                 </button>
                             </div>
                         </div>
+
                         <div th:if="${pg.floor.size > 0 || pg.floor.size != null}" class="card mt-4"
                             th:each="flr : ${pg.floor}">
-                            <div class="container-fluid text-center">
+                            <div class="container-fluid text-center">                               
                                 <h3 class="floor-name" th:text="${'Floor ' + flr.name}"></h3>
-                                <button type="button" title="Add Flat" class="btn add add-ffr custom-button">
+                                <input type="number" th:value="${flr.id}" id="floor" hidden >
+                                <button type="button" title="Add Flat" class="btn add add-ffr custom-button"
+                                    data-target="#addflat-modal" data-toggle="modal" id="add_flat"
+                                    th:onclick="|getId(${flr.id})|">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                                 <button type="button" title="Edit Floor" class="btn update add-ffr custom-button">
@@ -119,6 +126,13 @@
                                                 <div class="card d-flex mr-2">
                                                     <h4 class="floor-name" th:text="${r.name}"></h4>
 
+                                                    <button type="button" title="Edit Floor" class="btn update add-ffr custom-button">
+                                                        <i class="fa-solid fa-pen-nib"></i>
+                                                    </button>
+                                                    <button type="button" title="Delete Floor" th:onclick="|deleteFloor(${flr.id})|"
+                                                        class="btn delete add-ffr custom-button">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,47 +293,88 @@
         </div>
 
         <!-- Add Flat modal -->
-        <div class="modal fade" id="addFlat-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="addflat-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="container-fluid text-center">
-                            <h2 class="modal-title text-muted"
-                                th:text="${pg.floor.size > 0 || pg.floor.size != null ? 'Add Floor' : 'Edit Floor'}">
-                            </h2>
+                            <h2 class="modal-title text-muted">Add Flat</h2>
                         </div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
-                    <!-- ADD FLOOR MODAL BODY -->
+                    <!-- ADD FLAT MODAL BODY -->
                     <div class="modal-body">
-
-                        <div th:if="${pg.floor.size == 0}">
-                            <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
-                                th:object="${floor}">
-                        </div>
-                        <div th:if="${pg.floor != null && pg.floor.size > 0}">
-                            <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
-                                th:object="${floor}">
-                        </div>
-
                         <!-- floor name -->
-                        <div class="form-group">
-                            <label for="pg-name">Name</label>
-                            <input type="text" placeholder="Enter floor name" class="form-control" name="name">
-                        </div>
-
-                        <div>
-                            <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
-                        </div>
+                        <form id="addflatform" action="" method="POST">
+                            <div class="form-group">
+                                <label for="pg-name">Name</label>
+                                <input type="text" placeholder="Enter flat name" class="form-control" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pg-name">Hall space</label>
+                                <select class="form-control" name="hallSpace">
+                                    <option value="">Select</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <!-- <input id="floorId" name="floor" type="text" value="" hidden> -->
+                            <div>
+                                <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            // floor id
+            let flatId = null;
+            let flrId = null;
+
+            //get floor's id
+            function getId(id) {
+                flrId = id;
+            }
+
+            $('#addflatform').on('submit', function (event) {
+                event.preventDefault();
+                // it will create new input element in form for floor id
+                $('#addflatform').append(`<input type="text" name="floor" value="${flrId}" hidden>`);
+
+                let form = new FormData(this);
+                $.ajax({
+                    url: 'http://localhost:8282/owner/pg/add/flat',
+                    type: 'POST',
+                    data: form,
+
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data)
+
+                        if (data.trim() == 'done') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Saved successfully',
+                            }).then((value) => {
+                                window.location = ""
+                            });
+                        } else {
+                            swal(data);
+                        }
+                    },
+
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal("Something went wrong !");
+                    },
+                    processData: false,
+                    contentType: false
+                });
+            });
 
             function deleteFloor(fid) {
                 swal({

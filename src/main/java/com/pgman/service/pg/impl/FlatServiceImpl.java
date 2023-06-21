@@ -1,5 +1,6 @@
 package com.pgman.service.pg.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,23 +21,15 @@ public class FlatServiceImpl implements FlatService {
 
     @Override
     public Flat addFlat(Flat flat) {
-        Flat f = null;
-        try {
-            f = flatRepo.save(flat);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
-        return null;
+        flat.setAddedDate(LocalDate.now());
+        flat.setStatus(true);
+        Flat f = flatRepo.save(flat);
+        return f;
     }
 
     @Override
     public void deleteFlat(int id) {
-        try {
-            flatRepo.deleteById(id);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
-        
+        flatRepo.deleteById(id);
     }
 
     @Override
@@ -51,12 +44,7 @@ public class FlatServiceImpl implements FlatService {
 
     @Override
     public Flat updateFlat(int id, Flat flat) {
-        Flat f = null;
-        try {
-            f = flatRepo.save(flat);
-        } catch (Exception e) {
-            LOGGER.error("{}",e.getMessage());
-        }
+        Flat f = flatRepo.save(flat);
         return f;
     }
 
@@ -64,7 +52,6 @@ public class FlatServiceImpl implements FlatService {
     public List<Flat> getFlatByFloor(Floor floor) {
         return flatRepo.findAllFlatByFloor(floor);
     }
-
-    
+  
     
 }

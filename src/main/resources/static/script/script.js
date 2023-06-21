@@ -42,24 +42,13 @@ const search = () => {
     }
 }
 
-function getFloorData() {
-    $("select#floors").change(function () {
-        let floorId = $(this).children("option:selected").val();
-        console.log("You have selected value is " + floorId);
-    });
-}
-
-// $(document).ready(function() {
-//     $("select.selectVal").change(function() {
-//         let selecteditem = $(this).children("option:selected").val();
-//         console.log("You have selected value is " + selecteditem);
-//     });
-// });
-
 
 const floordd = document.getElementById("floor");
 const flatdd = document.getElementById("flat");
 const roomdd = document.getElementById("room");
+
+$('#warn-message2').hide()
+$('#warn-message1').hide()
 
 function getFlats(floorId) {
     let url = `http://localhost:8282/owner/floor/${floorId}`;
@@ -67,7 +56,7 @@ function getFlats(floorId) {
         return response.json();
     }).then((data) => {
         console.log(data);
-        if (data != null) {
+        if (data != 0) {
             // It will remove all childNode
             while (flatdd.firstChild) {
                 flatdd.removeChild(flatdd.firstChild);
@@ -76,66 +65,91 @@ function getFlats(floorId) {
             data.forEach((flat) => {
                 if (flat != null) {
                     console.log(flat);
+                    $('#flat').show();
+                    $('#warn-message1').hide();
                     let option = document.createElement("option");
                     option.value = flat["id"];
                     option.text = flat["name"]
                     //let optionText = document.createTextNode(data[flt]);
                     // option.appendChild(optionText);
                     flatdd.appendChild(option);
-                }
+                } 
             });
             getRooms(flatdd.firstChild.value)
         } else {
-            // ! need to add
+            $('#flat').hide();
+            $('#warn-message1').show()
+            $('#room').hide();
+            $('#warn-message2').hide()
         }
     });
 }
 
 function getRooms(flatId) {
-    // http://192.168.1.238:882
-    let url = `http://192.168.1.238:8282/owner/flat/${flatId}`;
-    fetch(url).then((response) => {
-        return response.json();
-    }).then((data) => {
-        console.log(data);
-        if (data != null) {
-            // It will remove all childNode
-            while (roomdd.firstChild) {
-                roomdd.removeChild(roomdd.firstChild);
-            }
+    if (flatId != null) {
+        let url2 = `http://localhost:8282/owner/flat/${flatId}`;
+        try {
+            fetch(url2).then((response) => {
+                return response.json();
+            }).then((data) => {
+                console.log(data);
+                if (data != 0) {
+                    // It will remove all childNode
+                    while (roomdd.firstChild) {
+                        roomdd.removeChild(roomdd.firstChild);
+                    }
 
-            data.forEach((room) => {
-                if (room != null) {
-                    console.log(room);
-                    let option = document.createElement("option");
-                    option.value = room["id"];
-                    option.text = room["name"]
-                    //let optionText = document.createTextNode(data[flt]);
-                    // option.appendChild(optionText);
-                    roomdd.appendChild(option);
+                    data.forEach((room) => {
+                        if (room != null) {
+                            console.log(room);
+                            $('#room').show();
+                            $('#warn-message2').hide();
+                            let option = document.createElement("option");
+                            option.value = room["id"];
+                            option.text = room["name"]
+                            roomdd.appendChild(option);
+                        }
+                    });
+                } else {
+                    $('#room').hide();
+                    $('#warn-message2').show()
+                    $('#submit-btn').find('button[type=submit]').prop('disabled', true);
+                    // $('#submit-btn').prop('disabled',true);
                 }
             });
-        } else {
-            // ! need to add
+        } catch (error) {
+            console.log(error);
         }
-    });
+    } else {
+        $('#submit-btn').hide();
+        swal("No flats are avialiable, Add first");
+    }
+
+
 }
 
-$('#allocationDetails').on('submit', function(event){
+$('#allocationDetails').on('submit', function (event) {
     event.preventDefault();
     let form = new FormData(this);
     $.ajax({
         // url : 'http://localhost:8282/owner/allocate/room/guest',
-        url : 'localhost:8282/owner/allocate/room/guest',
-        type : 'POST',
-        data : form,
+        url: 'http://localhost:8282/owner/allocate/room/guest',
+        type: 'PUT',
+        data: form,
 
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
             console.log(data)
-            
-            if(data.trim()  == 'done') {
-                swal("Saved successfully")
-                .then((value) => {
+
+            if (data.trim() == 'done') {
+                // swal("Saved successfully")
+                //     .then((value) => {
+                //         window.location = ""
+                //     });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Saved successfully',
+                }).then((value) => {
                     window.location = ""
                 });
             } else {
@@ -143,7 +157,7 @@ $('#allocationDetails').on('submit', function(event){
             }
         },
 
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             swal("Something went wrong !");
         },
         processData: false,
@@ -151,13 +165,38 @@ $('#allocationDetails').on('submit', function(event){
     });
 });
 
+//Add new pg
+$('#pgdetails').on('submit', function (event) {
+    event.preventDefault();
+    let form = new FormData(this);
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: form,
+        success: function(data, textStatus, jqXHR) {
+            console.log(data);
+            if(data.trim() == 'done') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Saved successfully',
+                }).then((value) => {
+                    window.location = ""
+                });
+            } else {
+                swal(data);
+            }
+        }
+    })
+})
+
 // document.getElementById('allocate_btn').onclick = function () {
 //     var floorId = $("#floor").val();
 //     var flatId = $("#flat").val();
 //     var roomId = $("#room").val();
 //     console.log("Floor Id : " + floorId + ", flat Id : " + flatId + ", room Id : " + roomId);
 //     if (floorId !=null && flatId != null && roomId !=null ) {
-       
+
 //     }
 // }
 

@@ -99,7 +99,8 @@
                                                 <i class="fa-solid fa-house"></i>
                                             </div>
                                             <select class="form-control" name="pgname">
-                                                <div th:each="name: ${pgs}">
+                                                <option value="None">Select PG</option>
+                                                <div th:each="name: ${pgs}">      
                                                     <option th:value="${name}"><span th:text="${name}"></span></option>
                                                 </div>
                                             </select>

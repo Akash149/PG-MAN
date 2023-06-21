@@ -31,6 +31,8 @@ public class Transactions implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    private String type;
+
     @ManyToOne
     @JsonIgnore
     private Guest guest;

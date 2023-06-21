@@ -21,8 +21,8 @@ public interface TransactionsRepository extends JpaRepository<Transactions, Inte
         // Get all payments of guest which paid to and owner
         public List<Transactions> findByGuestAndOwner(Guest guest, Owner owner);
    
-        @Query("select tr from Transactions tr where transactionDate between :startDate and :endDate and tr.owner = :owner")
-        public List<Transactions> getTransactionsOfCurrentMonth(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("owner") Owner owner);
+        @Query("select tr from Transactions tr where transactionDate between :startDate and :endDate and tr.owner = :owner and tr.type = :type")
+        public List<Transactions> getTransactionsOfCurrentMonth(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("owner") Owner owner, String type);
 
         // Get all the transaction by owner
         public List<Transactions> findByOwner(Owner owner);
