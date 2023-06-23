@@ -44,10 +44,10 @@ public class Room implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate addedDate = LocalDate.now();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", fetch = FetchType.EAGER, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", fetch = FetchType.EAGER)
     private List<Guest> guest;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Flat flat;
 

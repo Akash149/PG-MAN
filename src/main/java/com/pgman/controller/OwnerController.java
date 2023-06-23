@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -777,13 +778,62 @@ public class OwnerController {
     public ResponseEntity<String> addAFlat(Flat newFlat) {
         ResponseEntity response = null;
         try {
-            logger.info("{}",newFlat.getFloor().getId());
             flatService.addFlat(newFlat);
             logger.info("New flats are added");
             response = ResponseEntity.ok().body("done");
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
             ResponseEntity.ok("error").getStatusCode();
+        }
+        return response;
+    }
+
+    // Get a room by their id
+    @GetMapping("/pg/room/{roomId}")
+    public ResponseEntity<Room> getARoom(@PathVariable("roomId") int roomId) {
+        Room room = null;
+        ResponseEntity response = null;
+        try {
+            room = roomService.getARoom(roomId);
+            room.setGuest(null);
+            room.setFlat(null);
+            logger.info("Sending " + room.getId() + ", " + room.getName());
+            response = ResponseEntity.ok().body(room);
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    // add room
+    @PostMapping("/pg/add/room")
+    public ResponseEntity<String> addRoom(Room room) {
+        ResponseEntity response = null;
+        try {
+            roomService.addRoom(room);
+            logger.info("{}", room.getName() + " is added in " + room.getFlat().getName());
+            response = ResponseEntity.ok("done");
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.ok().body(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    // Update room
+    @PutMapping("/pg/update/room/{roomId}")
+    public ResponseEntity<String> updateRoom(@PathVariable("roomId") int roomId, Room room) {
+        ResponseEntity response = null;
+        try {
+            roomService.updateRoom(roomId,room);
+            logger.info("{}", room.getName() + " has been updated ");
+            response = ResponseEntity.ok("done");   
+            
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.ok().body(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
     }

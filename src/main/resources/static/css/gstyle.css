@@ -558,6 +558,14 @@ svg {
     align-content: center;
 }
 
+.room-btns {
+    position: relative;
+    /* margin-top: -65px; */
+    justify-content: center !important;
+    align-items: center;
+    align-content: center; 
+}
+
 .flat-view {
     display: blox;
 }

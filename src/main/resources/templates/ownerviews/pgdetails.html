@@ -108,33 +108,52 @@
                                     th:onclick="|getId(${flr.id})|">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
-                                <button type="button" title="Edit Floor" class="btn update add-ffr custom-button">
+                                <button type="button" th:title="${'Edit Floor ' + flr.name}" class="btn update add-ffr custom-button">
                                     <i class="fa-solid fa-pen-nib"></i>
                                 </button>
-                                <button type="button" title="Delete Floor" th:onclick="|deleteFloor(${flr.id})|"
+                                <button type="button" th:title="${'Delete Floor ' + flr.name}" th:onclick="|deleteFloor(${flr.id})|"
                                     class="btn delete add-ffr custom-button">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                                 <div class="row">
                                     <!-- flat view -->
-                                    <div class="card d-flex mr-3" th:each="flt : ${flr.flat}">
-                                        <h3 class="floor-name" th:text="${flt.name}"></h3>
-
-                                        <div class="row">
-                                            <!-- room view -->
-                                            <div th:each="r : ${flt.room}">
-                                                <div class="card d-flex mr-2">
-                                                    <h4 class="floor-name" th:text="${r.name}"></h4>
-
-                                                    <button type="button" title="Edit Floor" class="btn update add-ffr custom-button">
-                                                        <i class="fa-solid fa-pen-nib"></i>
-                                                    </button>
-                                                    <button type="button" title="Delete Floor" th:onclick="|deleteFloor(${flr.id})|"
-                                                        class="btn delete add-ffr custom-button">
-                                                        <i class="fa-solid fa-trash-can"></i>
-                                                    </button>
+                                    <div th:each="flt : ${flr.flat}">
+                                        <div class="card d-flex mr-3">
+                                            <h3 class="floor-name" th:text="${flt.name}"></h3>
+                                            <div class="row">
+                                                <!-- room view -->
+                                                <div th:each="r : ${flt.room}">
+                                                    <div class="card d-flex mr-2">
+                                                        <h4 class="floor-name" th:text="${r.name}"></h>
+    
+                                                    </div>
+                                                    <div class="text-center " style=" margin-top: -40px; margin-right: 6px;">
+                                                        <button type="button" th:title="${'Edit ' + r.name} " class="btn update room-btns tenxt-center custom-button"
+                                                        data-target="#editRoom-modal" data-toggle="modal" th:onclick="|getRoom(${flt.id},${r.Id})|">
+                                                            <i class="fa-solid fa-pen-nib"></i>
+                                                        </button>
+                                                        <button type="button" th:title="${'Delete ' + r.name} " th:onclick="|deleteRoom(${r.id})|"
+                                                            class="btn delete room-btns custom-button">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <!-- <div class="text-center " th:attr="style=#{flt.size==0 ? 'margin-top:10px;' : 'margin-top:-18px;' }"> -->
+                                        <div class="text-center " style="margin-top:-18px;">
+                                            <button type="button" th:title="${'Add room in ' + flt.name} " class="btn add room-btns text-center custom-button"
+                                            th:onclick="|getFlat(${flt.id})|" data-target="#addRoom-modal" data-toggle="modal">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                            <button type="button" th:title="${'Edit ' + flt.name} " class="btn update room-btns text-center custom-button">
+                                                <i class="fa-solid fa-pen-nib"></i>
+                                            </button>
+                                            <button type="button" th:title="${'Delete ' + flt.name} " th:onclick="|deleteFloor(${flr.id})|"
+                                                class="btn delete room-btns custom-button">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
                                         </div>
 
                                     </div>
@@ -153,6 +172,125 @@
                                 <span><i class="fa-solid fa-trash-can"></i></span>
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add room modal -->
+        <div class="modal fade" id="addRoom-modal" role="dialog" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="container text-center">
+                            <h2 class="modal-title" id="exampleModalLabel">Add room</h2>
+                        </div> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Room MODAL BODY -->
+                    <div class="modal-body">
+                        <form id="addroom-form" method="post"
+                            th:object="${room}">
+
+                            <!-- Room Name -->
+                            <div class="form-group">
+                                <label for="room-name">Room name</label>
+                                <input type="text" name="name" class="form-control" id="room_name"
+                                    placeholder="Enter room name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bed-count">Bed cound</label>
+                                <input type="number" name="bedCount" class="form-control" id="bed_count">
+                            </div>
+
+                            <div class="form-group">
+                                <!-- room of selected flat -->
+                                <label for="Washroom-type">Washroom type</label>
+                                <select class="form-control" id="room_washroom" name="washRoomType">
+                                    <option value="common">Common</option>
+                                    <option value="attached">Attached</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <!-- room of selected flat -->
+                                <label for="Washroom-type">Acitve status</label>
+                                <select class="form-control" id="isactive" name="status">
+                                    <option value="true">Inuse</option>
+                                    <option value="false">Unuse</option>
+                                </select>
+                            </div>
+                            
+                        
+                            <div>
+                                <button type="submit" id="add-room" class="btn btn-block btn-success">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit room modal -->
+        <div class="modal fade" id="editRoom-modal" role="dialog" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="container text-center">
+                            <h2 class="modal-title" id="exampleModalLabel">Edit room <span class="text-info" id="roomName"></span></h2>
+                        </div> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Room MODAL BODY -->
+                    <div class="modal-body">
+                        <div class="container text-center">
+                            <h3 class="text-info">Added Date : <span class="text-warning" id="roomAdded-date"></span></h3>
+                        </div> 
+                        <form id="editroom-form" method="post"
+                            th:object="${room}">
+
+                            <!-- Room Name -->
+                            <div class="form-group">
+                                <label for="room-name">Room name</label>
+                                <input type="text" name="name" class="form-control" id="room_name"
+                                    placeholder="Enter room name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bed-count">Bed cound</label>
+                                <input type="number" name="bedCount" class="form-control" id="bed_count">
+                            </div>
+
+                            <div class="form-group">
+                                <!-- room of selected flat -->
+                                <label for="Washroom-type">Washroom type</label>
+                                <select class="form-control" id="room_washroom" name="washRoomType">
+                                    <option value="common">Common</option>
+                                    <option value="attached">Attached</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <!-- room of selected flat -->
+                                <label for="Washroom-type">Acitve status</label>
+                                <select class="form-control" id="isactive" name="status">
+                                    <option value="true">Inuse</option>
+                                    <option value="false">Unuse</option>
+                                </select>
+                            </div>
+                            
+                        
+                            <div>
+                                <button type="submit" id="edit-room" class="btn btn-block btn-success">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -335,12 +473,85 @@
             // floor id
             let flatId = null;
             let flrId = null;
+            let roomId = null;
 
             //get floor's id
             function getId(id) {
-                flrId = id;
+                this.flrId = id;
             }
 
+            //get flat's id
+            function getFlat(flatid) {
+                flatId = flatid;
+                $('#addroom-form').append(`<input type="number" name="flat" value="${flatId}" hidden>`);
+                console.log('Flat id is ' + flatId);
+            }
+           
+            // Get a room by their id
+            function getRoom(flatid,roomid) {
+                roomId = roomid;
+                flatId = flatid;
+                // var room = null;
+                if(roomId != null) {
+                    let url = `http://localhost:8282/owner/pg/room/${roomid}`;
+                    try {
+                        fetch(url).then((response) => {
+                            return response.json();
+                        }).then((data) => {
+                            console.log(data);
+                            $('#roomAdded-date').text(`${data.addedDate}`);
+                            $('#room_name').val(''+data.name);
+                            $('#bed_count').val(''+data.bedCount);
+                            $('#room_washroom').val(''+data.washRoomType);
+                            $('#roomName').text(`${data.name}`);
+                            $('#isactive').val(`${data.status}`);
+                            $('#editroom-form').append(`<input type="number" name="id" value="${roomId}" hidden>`);
+                            $('#editroom-form').append(`<input type="number" name="flat" value="${flatId}" hidden>`);
+                        });
+                    } catch(error) {
+                        console.log(error);
+                    }
+                }
+            }
+
+            //update a room by their id
+            $('#editroom-form').on('submit', function (event) {
+                event.preventDefault();
+
+                let form = new FormData(this);
+                $.ajax({
+                    url: `http://localhost:8282/owner/pg/update/room/${roomId}`,
+                    type: 'PUT',
+                    data: form,
+
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data)
+                        if (data.trim() == 'done') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Saved successfully',
+                            }).then((value) => {
+                                window.location = ""
+                            }); 
+                        } else {
+                            swal(data);
+                        }
+                    }, 
+
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal("Something went wrong !");
+                    },
+                    processData: false,
+                    contentType: false
+                });
+            });
+
+            function deleteRoom(roomid) {
+                // this.roomId = roomid;
+            }
+
+            // Add flat in a floor
             $('#addflatform').on('submit', function (event) {
                 event.preventDefault();
                 // it will create new input element in form for floor id
@@ -349,6 +560,42 @@
                 let form = new FormData(this);
                 $.ajax({
                     url: 'http://localhost:8282/owner/pg/add/flat',
+                    type: 'POST',
+                    data: form,
+
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data)
+
+                        if (data.trim() == 'done') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Saved successfully',
+                            }).then((value) => {
+                                window.location = ""
+                            });
+                        } else {
+                            swal(data);
+                        }
+                    },
+
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal("Something went wrong !");
+                    },
+                    processData: false,
+                    contentType: false
+                });
+            });
+
+            // Add room in a flat
+            $('#addroom-form').on('submit', function (event) {
+                event.preventDefault();
+                // it will create new input element in form for floor id
+               // $('#addflatform').append(`<input type="text" name="floor" value="${flrId}" hidden>`);
+
+                let form = new FormData(this);
+                $.ajax({
+                    url: 'http://localhost:8282/owner/pg/add/room',
                     type: 'POST',
                     data: form,
 
