@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pgman.dto.FlatDTO;
+import com.pgman.dto.FloorDTO;
 import com.pgman.dto.RoomDTO;
 import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
@@ -52,6 +53,8 @@ import com.pgman.service.pg.FlatService;
 import com.pgman.service.pg.FloorService;
 import com.pgman.service.pg.PolicyService;
 import com.pgman.service.pg.RoomService;
+
+import lombok.experimental.PackagePrivate;
 
 @CrossOrigin(origins = { "*" }, maxAge = 4800, allowCredentials = "false")
 @Controller
@@ -768,7 +771,30 @@ public class OwnerController {
             response = ResponseEntity.ok().body("done");
         } catch (Exception e) {
             logger.error("{}",e.getMessage());
-            ResponseEntity.ok("error").getStatusCode();
+            response = ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+
+    // Get Flat by their id
+    @GetMapping("/pg/flat/{flatId}")
+    public ResponseEntity<Flat> getFlatDetails(@PathVariable("flatId") int flatId) {
+        ResponseEntity response = null;
+        Flat flat = null;
+        try {
+            flat = flatService.getAFlat(flatId);
+            if (flat != null) {
+                flat.setGuest(null);
+                flat.setRoom(null);
+                flat.setFloor(null);
+                logger.info("Sending " + flat.getId() + ", " + flat.getName());
+                response = ResponseEntity.ok().body(flat);
+            } else {
+                response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.internalServerError().build();
         }
         return response;
     }
@@ -783,7 +809,30 @@ public class OwnerController {
             response = ResponseEntity.ok().body("done");
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
-            ResponseEntity.ok("error").getStatusCode();
+            response = ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+
+    // update flat by their id
+    @PutMapping("/pg/update/flat/{flatId}")
+    public ResponseEntity<String> updateFlat(@PathVariable("flatId") int flatId, Flat flat) {
+        ResponseEntity response = null;
+        Flat flat_ = null;
+        try {
+            flat_ = flatService.getAFlat(flatId);
+            if(flat_ != null) {
+                flat_ = flat;
+                flatService.updateFlat(flatId, flat_);
+                logger.info("{}", flat.getName() + " has been updated");
+                response = ResponseEntity.ok("done");
+            } else {
+                logger.warn("{}",flatId + " not found in database");
+                response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.internalServerError().build();
         }
         return response;
     }
@@ -795,13 +844,17 @@ public class OwnerController {
         ResponseEntity response = null;
         try {
             room = roomService.getARoom(roomId);
-            room.setGuest(null);
-            room.setFlat(null);
-            logger.info("Sending " + room.getId() + ", " + room.getName());
-            response = ResponseEntity.ok().body(room);
+            if (room != null) {
+                room.setGuest(null);
+                room.setFlat(null);
+                logger.info("Sending " + room.getId() + ", " + room.getName());
+                response = ResponseEntity.ok().body(room);
+            } else {
+                response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
-            response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+            response = ResponseEntity.internalServerError().build();
         }
 
         return response;
@@ -817,12 +870,17 @@ public class OwnerController {
             response = ResponseEntity.ok("done");
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
-            response = ResponseEntity.ok().body(HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().build();
         }
         return response;
     }
 
     // Update room
+    /**
+     * @param roomId
+     * @param room
+     * @return
+     */
     @PutMapping("/pg/update/room/{roomId}")
     public ResponseEntity<String> updateRoom(@PathVariable("roomId") int roomId, Room room) {
         ResponseEntity response = null;
@@ -833,7 +891,57 @@ public class OwnerController {
             
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
-            response = ResponseEntity.ok().body(HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+
+    // Get a floor by their id
+    @GetMapping("/pg/floor/{id}")
+    public ResponseEntity<FloorDTO> getFloor(@PathVariable("id") int id) {
+        ResponseEntity response = null;
+        FloorDTO floorDTO = new FloorDTO();
+        try {
+            Floor floor = floorService.getAFloor(id);
+            
+            if (floor != null) {
+                floorDTO.setAddedDate(floor.getAddedDate());
+                floorDTO.setName(floor.getName());
+                floorDTO.setStatus(floor.isStatus());
+                response = ResponseEntity.ok(floorDTO);
+                logger.info("Sending " + floor.getName() + " floor data" );
+            } else {
+                logger.warn("{}", id + " not found in Database");
+                response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+
+    // Update foor
+    @PutMapping("/pg/update/floor/{floorId}")
+    public ResponseEntity<String> updateFloor(@PathVariable("floorId") int floorId, Floor floor) {
+        ResponseEntity response = null;
+        Floor floor_ = null;
+        try {
+            floor_ = floorService.getAFloor(floorId);
+            if (floor_ != null) {
+                floor.setPgDetails(floor_.getPgDetails());
+                floor_ = floor;
+                floorService.updateFloor(floorId, floor_);
+                logger.info("{}", floor.getName() + " has been updated");
+                response = ResponseEntity.ok("done");
+            } else {
+                logger.warn("{}", floorId + " not found in Database");
+                response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
+            }
+            
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.internalServerError().build();
         }
         return response;
     }

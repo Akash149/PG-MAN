@@ -41,14 +41,14 @@ public class Floor implements Serializable {
     @Column(columnDefinition = "boolean default true")
     private boolean status;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "floor", fetch = FetchType.EAGER, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "floor", fetch = FetchType.EAGER)
     private List<Guest> guest;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private PgDetails pgDetails;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "floor")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "floor")
     @JsonIgnore
     private List<Flat> flat;
 
