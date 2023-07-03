@@ -117,12 +117,12 @@ $('#editroom-form').on('submit', function (event) {
                     window.location = ""
                 });
             } else {
-                swal(data);
+                swal.fire(data);
             }
         },
 
         error: function (jqXHR, textStatus, errorThrown) {
-            swal("Something went wrong !");
+            swal.fire("Something went wrong !");
         },
         processData: false,
         contentType: false
@@ -155,7 +155,7 @@ $('#editfloor-form').on('submit', function (event) {
         },
 
         error: function (jqXHR, textStatus, errorThrown) {
-            swal("Something went wrong !");
+            swal.fire("Something went wrong !");
         },
         processData: false,
         contentType: false
@@ -183,7 +183,7 @@ $('#editflat-form').on('submit', function (event) {
                     window.location = ""
                 });
             } else {
-                swal(data);
+                swal.fire(data);
             }
         },
 
@@ -223,7 +223,7 @@ $('#addflatform').on('submit', function (event) {
                     window.location = ""
                 });
             } else {
-                swal(data);
+                swal.fire(data);
             }
         },
 
@@ -259,7 +259,7 @@ $('#addroom-form').on('submit', function (event) {
                     window.location = ""
                 });
             } else {
-                swal(data);
+                swal.fire(data);
             }
         },
 
@@ -272,17 +272,47 @@ $('#addroom-form').on('submit', function (event) {
 });
 
 function deleteFloor(fid) {
-    swal({
-        title: "Are you sure?",
-        text: "You want to delete this floor!",
-        icon: "warning",
-        button: true,
-        dangerMode: true,
-    }).then((willDelete) => {
-        if (willDelete) {
-            window.location = "/owner/delete/" + fid;
-        } else {
-            swal("Floor is not deleted");
-        }
-    });
+    let form = new FormData();
+    try {
+        swal.fire({
+            title: "Are you sure?",
+            text: "You want to delete this floor!",
+            icon: "warning",
+            showConfirmButton: true,
+            showDenyButton: true,
+            confirmButtonText: 'Yes',
+            dangerMode: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.append('floorId',fid);
+                $.ajax({
+                    url: 'http://localhost:8282/owner/pg/delete/floor',
+                    type: 'DELETE',
+                    data: form,
+                    processData: false,
+                    contentType: false,
+    
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data);
+    
+                        if (data.trim() == 'done') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Deleted successfully',
+                            }).then((value) => {
+                                window.location = "";
+                            });
+                        } else {
+                            swal.fire(data);
+                        }
+                    }
+                })
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }

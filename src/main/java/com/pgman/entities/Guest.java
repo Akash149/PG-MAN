@@ -135,5 +135,8 @@ public class Guest implements Serializable{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "guest", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Transactions> transactions;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Notifications> notifications;
     
 }

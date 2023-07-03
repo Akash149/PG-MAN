@@ -106,5 +106,8 @@ public class Owner implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Transactions> transactions;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Notifications> notifications;
     
 }

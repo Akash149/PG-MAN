@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -939,6 +940,21 @@ public class OwnerController {
                 response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
             }
             
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+            response = ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+
+    // Delete floor by their id
+    @DeleteMapping("/pg/delete/floor")
+    public ResponseEntity<String> deleteFloorById(@RequestParam("floorId") int floorId) {
+        ResponseEntity response = null;
+        try {
+            floorService.deleteFloor(floorId);
+            response = ResponseEntity.ok("done");
+            logger.info("Florr {}",floorId + " has been deleted");
         } catch (Exception e) {
             logger.error("{}", e.getMessage());
             response = ResponseEntity.internalServerError().build();

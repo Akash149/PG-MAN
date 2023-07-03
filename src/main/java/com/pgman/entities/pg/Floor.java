@@ -41,10 +41,10 @@ public class Floor implements Serializable {
     @Column(columnDefinition = "boolean default true")
     private boolean status;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "floor", fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "floor", fetch = FetchType.EAGER)
     private List<Guest> guest;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JsonIgnore
     private PgDetails pgDetails;
 

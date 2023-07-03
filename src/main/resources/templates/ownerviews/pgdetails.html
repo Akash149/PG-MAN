@@ -119,12 +119,12 @@
                                 <div class="row">
                                     <!-- flat view -->
                                     <div th:each="flt : ${flr.flat}">
-                                        <div class="card d-flex mr-3">
+                                        <div class="card d-flex mr-3" th:style="${flt.status ? '' : 'border-color: red!important'}">
                                             <h3 class="floor-name" th:text="${flt.name}"></h3>
                                             <div class="row">
                                                 <!-- room view -->
                                                 <div th:each="r : ${flt.room}">
-                                                    <div class="card d-flex mr-2">
+                                                    <div class="card d-flex mr-2" th:style="${r.status ? '' : 'border-color: red!important'}">
                                                         <h4 class="floor-name" th:text="${r.name}"></h>
     
                                                     </div>
