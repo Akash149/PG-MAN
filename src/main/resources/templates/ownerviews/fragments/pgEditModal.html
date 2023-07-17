@@ -1,4 +1,191 @@
 <aside>
+
+     <!-- Add Floor modal -->
+     <div class="modal fade" id="addFloor-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container-fluid text-center">
+                        <h2 class="modal-title text-muted"
+                            th:text="${pg.floor.size > 0 || pg.floor.size != null ? 'Add Floor' : 'Edit Floor'}">
+                        </h2>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- ADD FLOOR MODAL BODY -->
+                <div class="modal-body">
+
+                    <div th:if="${pg.floor.size == 0}">
+                        <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
+                            th:object="${floor}">
+                    </div>
+                    <div th:if="${pg.floor != null && pg.floor.size > 0}">
+                        <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
+                            th:object="${floor}">
+                    </div>
+
+                    <!-- floor name -->
+                    <div class="form-group">
+                        <label for="pg-name">Name</label>
+                        <input type="text" placeholder="Enter floor name" class="form-control" name="name">
+                    </div>
+
+                    <div>
+                        <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- Edit floor modal -->
+     <div class="modal fade" id="editFloor-modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container text-center">
+                        <h2 class="modal-title" id="exampleModalLabel">Edit floor <span class="text-info"
+                                id="floorName"></span></h2>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Room MODAL BODY -->
+                <div class="modal-body">
+                    <div class="container text-center">
+                        <h3 class="text-info">Added Date : <span class="text-warning" id="floorAdded-date"></span></h3>
+                    </div>
+                    <form id="editfloor-form" method="post" th:object="${flat}">
+
+                        <!-- Room Name -->
+                        <div class="form-group">
+                            <label for="room-name">Floor name</label>
+                            <input type="text" name="name" class="form-control" id="floor_name"
+                                placeholder="Enter room name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- room of selected flat -->
+                            <label for="Washroom-type">Acitve status</label>
+                            <select class="form-control" id="isactive" name="status" required>
+                                <option value="true">Inuse</option>
+                                <option value="false">Unuse</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <button type="submit" id="edit-floor" class="btn btn-block btn-success">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- Add Flat modal -->
+     <div class="modal fade" id="addflat-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container-fluid text-center">
+                        <h2 class="modal-title text-muted">Add Flat</h2>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- ADD FLAT MODAL BODY -->
+                <div class="modal-body">
+                    <!-- floor name -->
+                    <form id="addflatform" action="" method="POST">
+                        <div class="form-group">
+                            <label for="pg-name">Name</label>
+                            <input type="text" placeholder="Enter flat name" class="form-control" name="name" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="pg-name">Hall space</label>
+                            <select class="form-control" name="hallSpace">
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <!-- <input id="floorId" name="floor" type="text" value="" hidden> -->
+                        <div>
+                            <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit flat modal -->
+    <div class="modal fade" id="editFlat-modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container text-center">
+                        <h2 class="modal-title" id="exampleModalLabel">Edit flat <span class="text-info"
+                                id="flatName"></span></h2>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Room MODAL BODY -->
+                <div class="modal-body">
+                    <div class="container text-center">
+                        <h3 class="text-info">Added Date : <span class="text-warning" id="flatAdded-date"></span></h3>
+                    </div>
+                    <form id="editflat-form" method="post" th:object="${flat}">
+
+                        <!-- Room Name -->
+                        <div class="form-group">
+                            <label for="room-name">Flat name</label>
+                            <input type="text" name="name" class="form-control" id="flat_name"
+                                placeholder="Enter room name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- room of selected flat -->
+                            <label for="hallSpace">Hall space</label>
+                            <select class="form-control" id="hallSpace" name="hallSpace" required>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- room of selected flat -->
+                            <label for="Washroom-type">Acitve status</label>
+                            <select class="form-control" id="isactive" name="status" required>
+                                <option value="true">Inuse</option>
+                                <option value="false">Unuse</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <button type="submit" id="edit-flat" class="btn btn-block btn-success">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Add room modal -->
     <div class="modal fade" id="addRoom-modal" role="dialog" tabindex="-1">
         <div class="modal-dialog">
@@ -45,7 +232,6 @@
                             </select>
                         </div>
 
-
                         <div>
                             <button type="submit" id="add-room" class="btn btn-block btn-success">Save</button>
                         </div>
@@ -55,6 +241,7 @@
         </div>
     </div>
 
+
     <!-- Edit room modal -->
     <div class="modal fade" id="editRoom-modal" role="dialog" tabindex="-1">
         <div class="modal-dialog">
@@ -63,6 +250,7 @@
                     <div class="container text-center">
                         <h2 class="modal-title" id="exampleModalLabel">Edit room <span class="text-info"
                                 id="roomName"></span></h2>
+                        <!-- <h3 id="alert-message" class="text-center text-danger text-bold">Flat is not active, you cant update your room</h3> -->
                     </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -106,7 +294,6 @@
                             </select>
                         </div>
 
-
                         <div>
                             <button type="submit" id="edit-room" class="btn btn-block btn-success">Save</button>
                         </div>
@@ -116,104 +303,49 @@
         </div>
     </div>
 
-    <!-- Edit floor modal -->
-    <div class="modal fade" id="editFloor-modal" role="dialog" tabindex="-1">
+
+     <!-- policy modal -->
+     <div class="modal fade" id="policy-modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="container text-center">
-                        <h2 class="modal-title" id="exampleModalLabel">Edit floor <span class="text-info"
-                                id="floorName"></span></h2>
+                    <div class="container-fluid text-center">
+                        <h2 class="modal-title text-muted"
+                            th:text="${pg.policy == null ? 'Add policy' : 'Edit policy'}"></h2>
                     </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <!-- Room MODAL BODY -->
+                <!-- PG MODAL BODY -->
                 <div class="modal-body">
-                    <div class="container text-center">
-                        <h3 class="text-info">Added Date : <span class="text-warning" id="floorAdded-date"></span></h3>
+
+                    <div th:if="${pg.policy == null}">
+                        <form class="mx-1 mx-md-6" th:action="@{'/owner/add/'+${pg.id}+'/policy'}" method="post"
+                            th:object="${pgDetails}" enctype="multipart/form-data">
                     </div>
-                    <form id="editfloor-form" method="post" th:object="${flat}">
-
-                        <!-- Room Name -->
-                        <div class="form-group">
-                            <label for="room-name">Floor name</label>
-                            <input type="text" name="name" class="form-control" id="floor_name"
-                                placeholder="Enter room name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <!-- room of selected flat -->
-                            <label for="Washroom-type">Acitve status</label>
-                            <select class="form-control" id="isactive" name="status" required>
-                                <option value="true">Inuse</option>
-                                <option value="false">Unuse</option>
-                            </select>
-                        </div>
-
-
-                        <div>
-                            <button type="submit" id="edit-floor" class="btn btn-block btn-success">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Edit flat modal -->
-    <div class="modal fade" id="editFlat-modal" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="container text-center">
-                        <h2 class="modal-title" id="exampleModalLabel">Edit flat <span class="text-info"
-                                id="flatName"></span></h2>
+                    <div th:if="${pg.policy != null}">
+                        <form class="mx-1 mx-md-6" th:action="@{'/owner/update/'+${pg.id}+'/policy'}" method="post"
+                            th:object="${policy}" enctype="multipart/form-data">
                     </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
 
-                <!-- Room MODAL BODY -->
-                <div class="modal-body">
-                    <div class="container text-center">
-                        <h3 class="text-info">Added Date : <span class="text-warning" id="flatAdded-date"></span></h3>
+                    <!-- Policy message Message -->
+                    <div class="form-group">
+                        <label for="pg-name">Message</label>
+                        <textarea class="form-control" name="message" placeholder="Enter Policy message" rows="3"
+                            required></textarea>
                     </div>
-                    <form id="editflat-form" method="post" th:object="${flat}">
-
-                        <!-- Room Name -->
-                        <div class="form-group">
-                            <label for="room-name">Flat name</label>
-                            <input type="text" name="name" class="form-control" id="flat_name"
-                                placeholder="Enter room name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <!-- room of selected flat -->
-                            <label for="Washroom-type">Hall space</label>
-                            <select class="form-control" id="hallSpace" name="status" required>
-                                <option value="true">Yes</option>
-                                <option value="false">No</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <!-- room of selected flat -->
-                            <label for="Washroom-type">Acitve status</label>
-                            <select class="form-control" id="isactive" name="status" required>
-                                <option value="true">Inuse</option>
-                                <option value="false">Unuse</option>
-                            </select>
-                        </div>
-
-
-                        <div>
-                            <button type="submit" id="edit-flat" class="btn btn-block btn-success">Save</button>
-                        </div>
+                    <!-- <h3 th:text="${pg.policy.message == null}"><span>message not avialiable</span></h3> -->
+                    <div class="form-group">
+                        <label for="pg-name">Rules</label>
+                        <textarea class="form-control" name="rule" placeholder="Enter Policy message" rows="3"
+                            required></textarea>
+                    </div>
+                    <!-- <h3 th:text="${pg.policy.rule == null}"><span>message not avialiable</span></h3> -->
+                    <div>
+                        <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -263,133 +395,5 @@
             </div>
         </div>
     </div>
-
-    <!-- policy modal -->
-    <div class="modal fade" id="policy-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="container-fluid text-center">
-                        <h2 class="modal-title text-muted"
-                            th:text="${pg.policy == null ? 'Add policy' : 'Edit policy'}"></h2>
-                    </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <!-- PG MODAL BODY -->
-                <div class="modal-body">
-
-                    <div th:if="${pg.policy == null}">
-                        <form class="mx-1 mx-md-6" th:action="@{'/owner/add/'+${pg.id}+'/policy'}" method="post"
-                            th:object="${pgDetails}" enctype="multipart/form-data">
-                    </div>
-                    <div th:if="${pg.policy != null}">
-                        <form class="mx-1 mx-md-6" th:action="@{'/owner/update/'+${pg.id}+'/policy'}" method="post"
-                            th:object="${policy}" enctype="multipart/form-data">
-                    </div>
-
-                    <!-- Policy message Message -->
-                    <div class="form-group">
-                        <label for="pg-name">Message</label>
-                        <textarea class="form-control" name="message" placeholder="Enter Policy message" rows="3"
-                            required></textarea>
-                    </div>
-                    <!-- <h3 th:text="${pg.policy.message == null}"><span>message not avialiable</span></h3> -->
-                    <div class="form-group">
-                        <label for="pg-name">Rules</label>
-                        <textarea class="form-control" name="rule" placeholder="Enter Policy message" rows="3"
-                            required></textarea>
-                    </div>
-                    <!-- <h3 th:text="${pg.policy.rule == null}"><span>message not avialiable</span></h3> -->
-                    <div>
-                        <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Floor modal -->
-    <div class="modal fade" id="addFloor-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="container-fluid text-center">
-                        <h2 class="modal-title text-muted"
-                            th:text="${pg.floor.size > 0 || pg.floor.size != null ? 'Add Floor' : 'Edit Floor'}">
-                        </h2>
-                    </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <!-- ADD FLOOR MODAL BODY -->
-                <div class="modal-body">
-
-                    <div th:if="${pg.floor.size == 0}">
-                        <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
-                            th:object="${floor}">
-                    </div>
-                    <div th:if="${pg.floor != null && pg.floor.size > 0}">
-                        <form class="mx-1 mx-md-6" th:action="@{'/owner/'+${pg.id}+'/add/floor'}" method="post"
-                            th:object="${floor}">
-                    </div>
-
-                    <!-- floor name -->
-                    <div class="form-group">
-                        <label for="pg-name">Name</label>
-                        <input type="text" placeholder="Enter floor name" class="form-control" name="name">
-                    </div>
-
-                    <div>
-                        <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Flat modal -->
-    <div class="modal fade" id="addflat-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="container-fluid text-center">
-                        <h2 class="modal-title text-muted">Add Flat</h2>
-                    </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <!-- ADD FLAT MODAL BODY -->
-                <div class="modal-body">
-                    <!-- floor name -->
-                    <form id="addflatform" action="" method="POST">
-                        <div class="form-group">
-                            <label for="pg-name">Name</label>
-                            <input type="text" placeholder="Enter flat name" class="form-control" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pg-name">Hall space</label>
-                            <select class="form-control" name="hallSpace">
-                                <option value="">Select</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                        </div>
-                        <!-- <input id="floorId" name="floor" type="text" value="" hidden> -->
-                        <div>
-                            <button type="submit" id="update-pg" class="btn btn-block btn-success">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+ 
 </aside>

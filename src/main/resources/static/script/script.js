@@ -42,6 +42,24 @@ const search = () => {
     }
 }
 
+// Get payment details by their Id
+function paymentDetails(id) {
+    let url = `http://localhost:8282/owner/payment/${id}`;
+    fetch(url).then((response) => {
+        return response.json();
+    }).then((data) => {
+        console.log(data);
+        if (data != null) {
+            $("#gateway-name").text(`${data.gateway}`);
+            $("#p-amount").text(`${data.amount}`);
+            $("#p-date").text(`${data.date}`);
+            $("#p-refno").text(`${data.refNo}`);
+            $("#p-status").text(`${data.status}`);
+        } else {
+
+        }
+    });
+}
 
 const floordd = document.getElementById("floor");
 const flatdd = document.getElementById("flat");

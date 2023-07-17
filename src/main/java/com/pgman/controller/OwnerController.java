@@ -682,7 +682,7 @@ public class OwnerController {
             if (floor.getPgDetails().getOwner().getId().equals(this.owner.getId())) {
                 flats = flatService.getFlatByFloor(floor);
                 for (Flat flt : flats) {
-                    FlatDTO flatdto = new FlatDTO(flt.getId(), flt.getName());
+                    FlatDTO flatdto = new FlatDTO(flt.getId(), flt.getName(), flt.isStatus());
                     flatDto.add(flatdto);
                 }
                 logger.info("Total count of Flat is {}", flats.size());
@@ -712,7 +712,7 @@ public class OwnerController {
             if (flat != null) {
                 roomlist = flat.getRoom();
                 for (Room room : roomlist) {
-                    RoomDTO rDto = new RoomDTO(room.getId(), room.getName());
+                    RoomDTO rDto = new RoomDTO(room.getId(), room.getName(), room.isStatus());
                     roomDto.add(rDto);
                 }
                 logger.info("Total count of Room is {}", roomlist.size());
@@ -817,14 +817,20 @@ public class OwnerController {
 
     // update flat by their id
     @PutMapping("/pg/update/flat/{flatId}")
-    public ResponseEntity<String> updateFlat(@PathVariable("flatId") int flatId, Flat flat) {
+    public ResponseEntity<String> updateFlat(@PathVariable("flatId") int flatId, final Flat flat) {
         ResponseEntity response = null;
-        Flat flat_ = null;
+        //  flat_ = null;
         try {
-            flat_ = flatService.getAFlat(flatId);
+            final Flat flat_ = flatService.getAFlat(flatId);
             if(flat_ != null) {
-                flat_ = flat;
-                flatService.updateFlat(flatId, flat_);
+                if (flat_.isStatus() != flat.isStatus()) {
+                    List<Room> roomsOfFlat = flat_.getRoom();
+                    roomsOfFlat.stream().forEach(e -> {
+                    e.setStatus(flat.isStatus());
+                    //roomService.updateRoom(e.getId(), e);
+                });
+                }
+                flatService.updateFlat(flatId, flat);
                 logger.info("{}", flat.getName() + " has been updated");
                 response = ResponseEntity.ok("done");
             } else {
@@ -922,17 +928,23 @@ public class OwnerController {
         return response;
     }
 
-    // Update foor
+    // Update floor
     @PutMapping("/pg/update/floor/{floorId}")
     public ResponseEntity<String> updateFloor(@PathVariable("floorId") int floorId, Floor floor) {
         ResponseEntity response = null;
-        Floor floor_ = null;
+        //Floor floor_ = new Floor();
         try {
-            floor_ = floorService.getAFloor(floorId);
+            Floor floor_ = floorService.getAFloor(floorId);
             if (floor_ != null) {
                 floor.setPgDetails(floor_.getPgDetails());
-                floor_ = floor;
-                floorService.updateFloor(floorId, floor_);
+                if (floor_.isStatus() != floor.isStatus()) {
+                    List<Flat> flatsOfFloor = floor_.getFlat();
+                    flatsOfFloor.stream().forEach(e -> {
+                    e.setStatus(floor.isStatus());
+                    e.getRoom().stream().forEach(r -> r.setStatus(floor.isStatus()));
+                });
+                }
+                floorService.updateFloor(floorId, floor);
                 logger.info("{}", floor.getName() + " has been updated");
                 response = ResponseEntity.ok("done");
             } else {
@@ -962,5 +974,23 @@ public class OwnerController {
         return response;
     }
 
-
+    // Get transaction details by their id
+    @GetMapping("/payment/{id}")
+    public ResponseEntity<Transactions> getPaymentDetails(@PathVariable("id") int id) {
+        ResponseEntity response = null;
+        try {
+            // Transactions transaction = transactionService.getATransation(id);
+            Payments payment = paymentService.getAPayments(id);
+            if (payment != null) {
+                response = ResponseEntity.ok(payment);
+                logger.info("Payment: " + payment.getId() + " is sending");
+            } else {
+                logger.warn("Payment: " + id + " not found in DB");
+                response = ResponseEntity.ok().body(HttpStatus.NOT_FOUND);  
+            }
+        } catch (Exception e) {
+            logger.error("{}", e.getMessage());
+        }
+        return response;
+    }
 }

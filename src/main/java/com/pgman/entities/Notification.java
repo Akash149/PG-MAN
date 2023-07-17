@@ -1,18 +1,12 @@
 package com.pgman.entities;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,25 +14,25 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
+@Setter 
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notification {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private int id;
+    private int Id;
 
-    @NotNull
-    private String message;
+    @ManyToOne
+    @JsonIgnore
+    private Matter notification;
 
-    private boolean isRead;
+    @ManyToOne
+    @JsonIgnore
+    private Guest guests;
 
-    @CreationTimestamp
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private LocalDate createdDate;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Notifications> notifications;
+    @ManyToOne
+    @JsonIgnore
+    private Owner owners;
     
 }

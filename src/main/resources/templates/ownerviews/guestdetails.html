@@ -112,7 +112,7 @@
                                     <tr>
                                         <th>#ID</th>
                                         <th>Status</th>
-                                        <th>Ref. No</th>
+                                        <th class="d-lg-none .d-xl-block">Ref. No</th>
                                         <th>Gateway</th>
                                         <th>Amount</th>
                                         <th>Date</th>
@@ -124,7 +124,7 @@
                                         <td th:classappend="${!pay.status ? 'text-danger' : 'text-success'}">
                                             <span th:text="${pay.status ? 'Success' : 'Failed'}"></span>
                                         </td>
-                                        <td th:text="${pay.refNo}"></td>
+                                        <td class="d-lg-none .d-xl-block" th:text="${pay.refNo}"></td>
                                         <td th:text="${pay.gateway}"></td>
                                         <td th:classappend="${!pay.status ? 'text-danger' : 'text-success'}"
                                             style="font-weight: 700;">
@@ -192,31 +192,11 @@
 
                                 <div>
                                     <h2>To be paid :
-                                        <span><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                                        <span><i class="fa- `1solid fa-indian-rupee-sign"></i></span>
                                         <span style="font-weight: 800;" th:text="${guest.remainingAmount}"></span>
                                     </h2>
                                 </div>
                             </div>
-
-                            <!-- <form th:action="@{/owner/collect-cash}" method="post"></form>
-                                <div class="input-group form-group ">
-                                    <div class="input-group-text">
-                                        <i class="fa-solid fa-indian-rupee-sign"></i>
-                                    </div>
-                                    <label for="cash-amount">Amount</label>
-                                    <input type="number" name="amount" class="form-control" id="amount"
-                                        placeholder="Enter amount" required>
-                                    <input type="text" name="guestId" th:value="${guest.id}" hidden>
-                                </div>
-                                <div class="container text-center" id="loader" style="display: none;">
-                                    <span class="fa fa-refresh fa-spin fa-3x"></span>
-                                    <h4>Please wait...</h4>
-                                </div>
-                                <div>
-                                    <button type="submit" id="update-pg" th:onclick="|collectcash(${flr.id})|" class="btn btn-block btn-success">Collect</button>
-                                    <button type="submit" class="btn btn-block btn-success">Collect</button>
-                                </div>
-                            </form> -->
 
                             <form th:action="@{/owner/collect-cash}" method="post">
                                 <div class="form-group">

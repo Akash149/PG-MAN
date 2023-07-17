@@ -137,6 +137,6 @@ public class Guest implements Serializable{
     private List<Transactions> transactions;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Notifications> notifications;
+    private List<Notification> notifications;
     
 }

@@ -51,5 +51,6 @@ public class Flat implements Serializable{
     private Floor floor;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "flat")
+    @JsonIgnore
     private List<Room> room;
 }

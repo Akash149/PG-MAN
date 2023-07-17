@@ -107,13 +107,8 @@
                                             <div th:each="r : ${flt.room}">
                                                 <div class="card d-flex mr-2">
                                                     <h4 class="floor-name" th:text="${r.name}"></h4>
-                                                    <div th:if="${#lists.isEmpty(flt.guest)}">
-                                                        <p class="text-danger">Guesets are not avialiable</p>
-                                                        <a th:href="@{'/owner/'+${pg.id}+'/'+${pg.name.replace(' ','-')}+'/details'}"
-                                                            target="_blank">
-                                                            <i class="fa fa-plus fa-2x"></i>
-                                                        </a>
-                                                        <!-- <img src="/src/main/resources/static/assests/empty.png" alt=""> -->
+                                                    <div th:if="${#lists.isEmpty(r.guest)}">
+                                                        <p class="text-danger">Guests are not avialiable</p>
                                                     </div>
                                                     <!-- guest view -->
                                                     <div th:each="gst : ${r.guest}">

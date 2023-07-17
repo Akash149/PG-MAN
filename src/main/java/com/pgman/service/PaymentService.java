@@ -24,5 +24,8 @@ public interface PaymentService {
 
     //5. get all payments by guest
     public List<Payments> getAllPaymentByGuest(Guest guest);
+
+    //6. Get a payment by thir id
+    public Payments getAPayments(int paymentId);
     
 }

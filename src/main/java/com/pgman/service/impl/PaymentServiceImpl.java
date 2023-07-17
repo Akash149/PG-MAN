@@ -72,6 +72,11 @@ public class PaymentServiceImpl implements PaymentService {
             logger.warn("{} {}", guest.getId(), "not Found in repository");
             return new ArrayList<Payments>();
        }
+    }
+
+    @Override
+    public Payments getAPayments(int paymentId) {
+        return paymentRepo.getReferenceById(paymentId);
     }  
      
 }

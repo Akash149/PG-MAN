@@ -13,5 +13,6 @@ public class RoomDTO {
 
     private int id;
     private String name;
+    private boolean status;
     
 }

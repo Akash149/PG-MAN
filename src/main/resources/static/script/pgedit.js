@@ -6,7 +6,7 @@ let roomId = null;
 
 //get floor's id
 function getId(id) {
-    this.flrId = id;
+    flrId = id;
 }
 
 //get flat's id
@@ -16,7 +16,8 @@ function getFlat(flatid) {
     console.log('Flat id is ' + flatId);
 }
 
-// Get a fkoor by their id
+
+// Get a floor by their id
 function updateFloor(floorid) {
     flrId = floorid;
     // var room = null;
@@ -41,35 +42,42 @@ function updateFloor(floorid) {
     }
 }
 
-// Get a room by their id
-function updateRoom(flatid, roomid) {
-    roomId = roomid;
-    flatId = flatid;
-    // var room = null;
-    if (roomId != null) {
-        let url = `http://localhost:8282/owner/pg/room/${roomid}`;
-        try {
-            fetch(url).then((response) => {
-                return response.json();
-            }).then((data) => {
-                console.log(data);
-                $('#roomAdded-date').text(`${data.addedDate}`);
-                //document.getElementById('room_name').value = data.name;
-                $('#room_name').val(data.name);
-                $('#bed_count').val(data.bedCount);
-                $('#room_washroom').val(data.washRoomType);
-                $('#roomName').text(`${data.name}`);
-                $('#isactive').val(`${data.status}`);
-                $('#editroom-form').append(`<input type="number" name="id" value="${roomId}" hidden>`);
-                $('#editroom-form').append(`<input type="number" name="flat" value="${flatId}" hidden>`);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-}
 
-// Update flat by their Id
+//update a floor by their id
+$('#editfloor-form').on('submit', function (event) {
+    event.preventDefault();
+
+    let form = new FormData(this);
+    $.ajax({
+        url: `http://localhost:8282/owner/pg/update/floor/${flrId}`,
+        type: 'PUT',
+        data: form,
+
+        success: function (data, textStatus, jqXHR) {
+            console.log(data)
+            if (data.trim() == 'done') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Saved successfully',
+                }).then((value) => {
+                    window.location = ""
+                });
+            } else {
+                swal.fire(data);
+            }
+        },
+
+        error: function (jqXHR, textStatus, errorThrown) {
+            swal.fire("Something went wrong !");
+        },
+        processData: false,
+        contentType: false
+    });
+});
+
+
+// Get flat by their Id
 function updateFlat(floorid,flatid) {
     flrId = floorid;
     flatId = flatid;
@@ -95,6 +103,148 @@ function updateFlat(floorid,flatid) {
         }
     }
 }
+
+
+// Add flat in a floor
+$('#addflatform').on('submit', function (event) {
+    event.preventDefault();
+    // it will create new input element in form for floor id
+    $('#addflatform').append(`<input type="text" name="floor" value="${flrId}" hidden/>`);
+
+    let form = new FormData(this);
+    $.ajax({
+        url: 'http://localhost:8282/owner/pg/add/flat',
+        type: 'POST',
+        data: form,
+
+        success: function (data, textStatus, jqXHR) {
+            console.log(data)
+
+            if (data.trim() == 'done') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Saved successfully',
+                }).then((value) => {
+                    window.location = ""
+                });
+            } else {
+                swal.fire(data);
+            }
+        },
+
+        error: function (jqXHR, textStatus, errorThrown) {
+            swal.fire("Something went wrong !");
+        },
+        processData: false,
+        contentType: false
+    });
+});
+
+
+//update a flat by their id
+$('#editflat-form').on('submit', function (event) {
+    event.preventDefault();
+
+    let form = new FormData(this);
+    $.ajax({
+        url: `http://localhost:8282/owner/pg/update/flat/${flatId}`,
+        type: 'PUT',
+        data: form,
+
+        success: function (data, textStatus, jqXHR) {
+            console.log(data)
+            if (data.trim() == 'done') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Saved successfully',
+                }).then((value) => {
+                    window.location = ""
+                });
+            } else {
+                swal.fire(data);
+            }
+        },
+
+        error: function (jqXHR, textStatus, errorThrown) {
+            swal.fire("Something went wrong !");
+        },
+        processData: false,
+        contentType: false
+    });
+});
+
+
+// Get a room by their id
+function updateRoom(flatid, roomid) {
+    roomId = roomid;
+    flatId = flatid;
+    // var room = null;
+    if (roomId != null) {
+        let url = `http://localhost:8282/owner/pg/room/${roomid}`;
+        try {
+            fetch(url).then((response) => {
+                return response.json();
+            }).then((data) => {
+                console.log(data);
+                $('#alert-message').hide();
+                $('#roomAdded-date').text(`${data.addedDate}`);
+                //document.getElementById('room_name').value = data.name;
+                $('#room_name').val(data.name);
+                $('#bed_count').val(data.bedCount);
+                $('#room_washroom').val(data.washRoomType);
+                $('#roomName').text(`${data.name}`);
+                $('#isactive').val(`${data.status}`);
+                $('#editroom-form').append(`<input type="number" name="id" value="${roomId}" hidden>`);
+                $('#editroom-form').append(`<input type="number" name="flat" value="${flatId}" hidden>`);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+function alertMessage() {
+    $('#alert-message').show();
+}
+
+// Add room in a flat
+$('#addroom-form').on('submit', function (event) {
+    event.preventDefault();
+    // it will create new input element in form for floor id
+    // $('#addflatform').append(`<input type="text" name="floor" value="${flrId}" hidden>`);
+
+    let form = new FormData(this);
+    $.ajax({
+        url: 'http://localhost:8282/owner/pg/add/room',
+        type: 'POST',
+        data: form,
+
+        success: function (data, textStatus, jqXHR) {
+            console.log(data)
+
+            if (data.trim() == 'done') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Saved successfully',
+                }).then((value) => {
+                    window.location = ""
+                });
+            } else {
+                swal.fire(data);
+            }
+        },
+
+        error: function (jqXHR, textStatus, errorThrown) {
+            swal.fire("Something went wrong !");
+        },
+        processData: false,
+        contentType: false
+    });
+});
+
 
 //update a room by their id
 $('#editroom-form').on('submit', function (event) {
@@ -129,147 +279,11 @@ $('#editroom-form').on('submit', function (event) {
     });
 });
 
-//update a floor by their id
-$('#editfloor-form').on('submit', function (event) {
-    event.preventDefault();
-
-    let form = new FormData(this);
-    $.ajax({
-        url: `http://localhost:8282/owner/pg/update/floor/${flrId}`,
-        type: 'PUT',
-        data: form,
-
-        success: function (data, textStatus, jqXHR) {
-            console.log(data)
-            if (data.trim() == 'done') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Saved successfully',
-                }).then((value) => {
-                    window.location = ""
-                });
-            } else {
-                swal(data);
-            }
-        },
-
-        error: function (jqXHR, textStatus, errorThrown) {
-            swal.fire("Something went wrong !");
-        },
-        processData: false,
-        contentType: false
-    });
-});
-
-//update a flat by their id
-$('#editflat-form').on('submit', function (event) {
-    event.preventDefault();
-
-    let form = new FormData(this);
-    $.ajax({
-        url: `http://localhost:8282/owner/pg/update/flat/${flatId}`,
-        type: 'PUT',
-        data: form,
-
-        success: function (data, textStatus, jqXHR) {
-            console.log(data)
-            if (data.trim() == 'done') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Saved successfully',
-                }).then((value) => {
-                    window.location = ""
-                });
-            } else {
-                swal.fire(data);
-            }
-        },
-
-        error: function (jqXHR, textStatus, errorThrown) {
-            swal("Something went wrong !");
-        },
-        processData: false,
-        contentType: false
-    });
-});
 
 function deleteRoom(roomid) {
     // this.roomId = roomid;
 }
 
-// Add flat in a floor
-$('#addflatform').on('submit', function (event) {
-    event.preventDefault();
-    // it will create new input element in form for floor id
-    $('#addflatform').append(`<input type="text" name="floor" value="${flrId}" hidden>`);
-
-    let form = new FormData(this);
-    $.ajax({
-        url: 'http://localhost:8282/owner/pg/add/flat',
-        type: 'POST',
-        data: form,
-
-        success: function (data, textStatus, jqXHR) {
-            console.log(data)
-
-            if (data.trim() == 'done') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Saved successfully',
-                }).then((value) => {
-                    window.location = ""
-                });
-            } else {
-                swal.fire(data);
-            }
-        },
-
-        error: function (jqXHR, textStatus, errorThrown) {
-            swal("Something went wrong !");
-        },
-        processData: false,
-        contentType: false
-    });
-});
-
-// Add room in a flat
-$('#addroom-form').on('submit', function (event) {
-    event.preventDefault();
-    // it will create new input element in form for floor id
-    // $('#addflatform').append(`<input type="text" name="floor" value="${flrId}" hidden>`);
-
-    let form = new FormData(this);
-    $.ajax({
-        url: 'http://localhost:8282/owner/pg/add/room',
-        type: 'POST',
-        data: form,
-
-        success: function (data, textStatus, jqXHR) {
-            console.log(data)
-
-            if (data.trim() == 'done') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Saved successfully',
-                }).then((value) => {
-                    window.location = ""
-                });
-            } else {
-                swal.fire(data);
-            }
-        },
-
-        error: function (jqXHR, textStatus, errorThrown) {
-            swal("Something went wrong !");
-        },
-        processData: false,
-        contentType: false
-    });
-});
 
 function deleteFloor(fid) {
     let form = new FormData();
