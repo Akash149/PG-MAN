@@ -44,6 +44,7 @@ import com.pgman.entities.pg.Floor;
 import com.pgman.entities.pg.PgDetails;
 import com.pgman.entities.pg.Policy;
 import com.pgman.entities.pg.Room;
+import com.pgman.service.EmailService;
 import com.pgman.service.ExcelService;
 import com.pgman.service.GuestService;
 import com.pgman.service.OwnerService;
@@ -55,7 +56,6 @@ import com.pgman.service.pg.FloorService;
 import com.pgman.service.pg.PolicyService;
 import com.pgman.service.pg.RoomService;
 
-import lombok.experimental.PackagePrivate;
 
 @CrossOrigin(origins = { "*" }, maxAge = 4800, allowCredentials = "false")
 @Controller
@@ -94,6 +94,9 @@ public class OwnerController {
 
     @Autowired
     private PgUtilities pgUtilities;
+
+    @Autowired
+    private EmailService emailServices;
 
     Logger logger = LoggerFactory.getLogger(OwnerController.class);
 
@@ -507,6 +510,7 @@ public class OwnerController {
             @RequestParam("amount") int amount, @RequestParam("collectiontype") String collType,
             RedirectAttributes rat) {
         Guest guest = null;
+        boolean emailStatus;
         try {
             guest = guestService.getGuestById(guestId);
             if (amount > 0) {
@@ -533,8 +537,12 @@ public class OwnerController {
                     transactionService.updateTransaction(transactions.getId(), transactions);
                     guest.setPaidAmount(amount);
                     guest.setRemainingAmount(guest.getRemainingAmount() - amount);
-                    guest.setPaymentStatus(true);
+                    // guest.setPaymentStatus(true);
                     guestService.updateGuest(guestId, guest);
+                    String message = "Hi, " + guest.getName() + ", you have paid " + amount + " to " + guest.getPgDetails().getName();
+                    emailStatus = emailServices.sendEmail("Rent Collection",message,guest.getEmail());
+                    if (emailStatus)
+                        logger.info("Email has been sent on {}",guest.getEmail());
                     logger.info(guest.getName() + " has been paid their rent, collected amount is " + amount);
                 }
 
@@ -543,6 +551,10 @@ public class OwnerController {
                     transactionService.updateTransaction(transactions.getId(), transactions);
                     guest.setAdvancePaid(guest.getAdvancePaid() + amount);
                     guestService.updateGuest(guestId, guest);
+                    String message = "Hi, " + guest.getName() + ", you have paid " + amount + " to " + guest.getPgDetails().getName();
+                    emailStatus = emailServices.sendEmail("Advance Collection",message,guest.getEmail());
+                    if (emailStatus)
+                        logger.info("Email has been sent on {}",guest.getEmail());
                     logger.info(guest.getName() + " has been paid the advance, collected amount is " + amount);
                 }
 

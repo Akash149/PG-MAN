@@ -7,13 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.pgman.entities.Guest;
 import com.pgman.entities.Owner;
 import com.pgman.entities.pg.Room;
 
-@Repository
 public interface GuestRepository extends JpaRepository<Guest, String> {
 
     // Get guest by email (String)
@@ -32,7 +30,7 @@ public interface GuestRepository extends JpaRepository<Guest, String> {
 
     // Search guest
     public List<Guest> findByNameContainingAndOwner(String name, Owner owner);
-    public List<Guest> findByNameLikeAndOwner(String name, Owner owner);
+    public List<Guest> findByNameContainingIgnoreCaseAndOwner(String name, Owner owner);
 
     // @Query("select count(g.guest) from owner where owner = :owner")
     public int countGuestByOwner(Owner owner);

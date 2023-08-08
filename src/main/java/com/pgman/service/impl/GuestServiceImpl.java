@@ -129,7 +129,7 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public List<Guest> getSearchedGuest(String name, Owner owner) {
-        guestRepository.findByNameLikeAndOwner(name, owner);
+        guestRepository.findByNameContainingIgnoreCaseAndOwner(name, owner);
         return null;
     }
 

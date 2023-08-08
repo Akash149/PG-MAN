@@ -2,11 +2,13 @@ package com.pgman.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import com.pgman.config.impl.UserDetailsServiceImpl;
 import com.pgman.entities.PgUtilities;
 import com.pgman.service.AddressService;
+import com.pgman.service.EmailService;
 import com.pgman.service.GuestService;
 import com.pgman.service.OwnerService;
 import com.pgman.service.PaymentService;
@@ -104,6 +106,12 @@ public class MyConfig {
     @Bean
     PgUtilities getPgUtilities() {
         return new PgUtilities();
+    }
+
+    @Bean
+    @Primary
+    EmailService getEmailService() {
+        return new EmailService();
     }
 
 }
